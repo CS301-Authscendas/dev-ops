@@ -2,7 +2,7 @@
 
 resource "aws_ecs_cluster" "aws_ecs" {
   for_each = toset(var.clusters)
-  name     = "${var.app_name}-${var.app_environment}-ecs-${each.key}"
+  name     = "${var.app_name}-ecs-${each.key}"
   setting {
     name  = "containerInsights"
     value = "enabled"
@@ -14,7 +14,7 @@ resource "aws_ecs_cluster" "aws_ecs" {
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  name = "${var.app_name}-${var.app_environment}-logs"
+  name = "${var.app_name}-logs"
 
   tags = {
     Application = var.app_name
@@ -23,7 +23,7 @@ resource "aws_cloudwatch_log_group" "log_group" {
 }
 
 resource "aws_ecs_task_definition" "aws_ecs_task" {
-  for_each = { for microservice in var.microservices : microservice.name => microservice }
+  for_each = var.microservices
   family   = "${var.app_name}-task-${each.key}"
 
   container_definitions = <<DEFINITION
@@ -38,7 +38,7 @@ resource "aws_ecs_task_definition" "aws_ecs_task" {
                 "options" : {
                     "awslogs-group" : "${aws_cloudwatch_log_group.log_group.id}",
                     "awslogs-region" : "${var.aws_region}",
-                    "awslogs-stream-prefix" : "${var.app_name}-${var.app_environment}"
+                    "awslogs-stream-prefix" : "${var.app_name}"
                 }
             },
             "portMappings" : [

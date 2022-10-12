@@ -72,8 +72,8 @@ variable "clusters" {
 
 variable "microservices" {
   description = "List of microservices"
-  type = list(object({
-    name          = string
+  type = map(object({
+    cluster       = string
     hostPort      = number
     containerPort = number
     indivdualCpu  = number
