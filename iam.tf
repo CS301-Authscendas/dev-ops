@@ -1,6 +1,6 @@
 # iam.tf | IAM Role Policies
 
-data "aws_iam_policy_document" "ecs-task-policy" {
+data "aws_iam_policy_document" "ecs_task_policy" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -11,16 +11,16 @@ data "aws_iam_policy_document" "ecs-task-policy" {
   }
 }
 
-resource "aws_iam_role" "ecs-task-execution-role" {
+resource "aws_iam_role" "ecs_task_execution_role" {
   name               = "${var.app_name}-ecs-execution-task-role"
-  assume_role_policy = data.aws_iam_policy_document.ecs-task-policy.json
+  assume_role_policy = data.aws_iam_policy_document.ecs_task_policy.json
   tags = {
     Name        = "${var.app_name}-iam-role"
     Environment = var.app_environment
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-policy" {
-  role       = aws_iam_role.ecs-task-execution-role.name
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
+  role       = aws_iam_role.ecs_task_execution_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
 }
