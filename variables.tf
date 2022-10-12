@@ -73,14 +73,14 @@ variable "clusters" {
 variable "microservices" {
   description = "List of microservices"
   type = map(object({
-    cluster       = string
-    hostPort      = number
-    containerPort = number
-    indivdualCpu  = number
-    totalMemory   = number
-    totalCpu      = number
-    totalMemory   = number
-    index         = number
+    cluster          = string
+    hostPort         = number
+    containerPort    = number
+    indivdualCpu     = number
+    individualMemory = number
+    totalCpu         = number
+    totalMemory      = number
+    index            = number
   }))
 }
 
