@@ -65,9 +65,22 @@ variable "availability_zones" {
   type        = list(string)
 }
 
-variable "services" {
+variable "clusters" {
+  description = "List of clusters"
+  type        = list(string)
+}
+
+variable "microservices" {
   description = "List of microservices"
-  type        = set(string)
+  type = list(object({
+    name          = string
+    hostPort      = number
+    containerPort = number
+    indivdualCpu  = number
+    totalMemory   = number
+    totalCpu      = number
+    totalMemory   = number
+  }))
 }
 
 # variable "database_name" {

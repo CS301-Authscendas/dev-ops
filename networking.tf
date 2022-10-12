@@ -18,7 +18,6 @@ resource "aws_internet_gateway" "aws-igw" {
 }
 
 # ==== CONFIGURATION FOR AVAILABILITY ZONE 1A ==== #
-
 resource "aws_subnet" "public-1a" {
   vpc_id            = aws_vpc.aws-vpc.id
   cidr_block        = var.public_subnets_1a
@@ -35,13 +34,12 @@ resource "aws_subnet" "private-1a" {
   cidr_block        = element(var.private_subnets_1a, count.index)
   availability_zone = var.availability_zones[0]
   tags = {
-    Name        = "${var.app_name}-private-subnet-1a-${var.services[count.index]}"
+    Name        = "${var.app_name}-private-subnet-1a-${var.clusters[count.index]}"
     Environment = var.app_environment
   }
 }
 
 # ==== CONFIGURATION FOR AVAILABILITY ZONE 1B ==== #
-
 resource "aws_subnet" "public-1b" {
   vpc_id            = aws_vpc.aws-vpc.id
   cidr_block        = var.public_subnets_1b
@@ -58,7 +56,7 @@ resource "aws_subnet" "private-1b" {
   cidr_block        = element(var.private_subnets_1b, count.index)
   availability_zone = var.availability_zones[1]
   tags = {
-    Name        = "${var.app_name}-private-subnet-1b-${var.services[count.index]}"
+    Name        = "${var.app_name}-private-subnet-1b-${var.clusters[count.index]}"
     Environment = var.app_environment
   }
 }
@@ -110,19 +108,19 @@ resource "aws_eip" "eip-1b" {
 resource "aws_nat_gateway" "ngw-1a" {
   allocation_id = aws_eip.eip-1a.id
   subnet_id     = aws_subnet.public-1a.id
+  depends_on    = [aws_internet_gateway.aws-igw, aws_eip.eip-1a]
   tags = {
     Name = "${var.app_name}-ngw-1a"
   }
-  depends_on = [aws_internet_gateway.aws-igw, aws_eip.eip-1a]
 }
 
 resource "aws_nat_gateway" "ngw-1b" {
   allocation_id = aws_eip.eip-1b.id
   subnet_id     = aws_subnet.public-1b.id
+  depends_on    = [aws_internet_gateway.aws-igw, aws_eip.eip-1b]
   tags = {
     Name = "${var.app_name}-ngw-1b"
   }
-  depends_on = [aws_internet_gateway.aws-igw, aws_eip.eip-1b]
 }
 
 # ==== CONFIGURATION FOR PRIVATE ROUTE TABLE ==== #
