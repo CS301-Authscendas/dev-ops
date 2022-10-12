@@ -80,6 +80,7 @@ variable "microservices" {
     totalMemory   = number
     totalCpu      = number
     totalMemory   = number
+    index         = number
   }))
 }
 
