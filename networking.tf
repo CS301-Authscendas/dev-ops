@@ -91,33 +91,33 @@ resource "aws_route_table_association" "public-1b" {
 }
 
 # ==== CONFIGURATION FOR NAT GATEWAY ==== #
-resource "aws_eip" "eip-1a" {
+resource "aws_eip" "aws-eip-1a" {
   vpc = true
   tags = {
     Name = "${var.app_name}-eip-1a"
   }
 }
 
-resource "aws_eip" "eip-1b" {
+resource "aws_eip" "aws-eip-1b" {
   vpc = true
   tags = {
     Name = "${var.app_name}-eip-1b"
   }
 }
 
-resource "aws_nat_gateway" "ngw-1a" {
-  allocation_id = aws_eip.eip-1a.id
+resource "aws_nat_gateway" "aws-ngw-1a" {
+  allocation_id = aws_eip.aws-eip-1a.id
   subnet_id     = aws_subnet.public-1a.id
-  depends_on    = [aws_internet_gateway.aws-igw, aws_eip.eip-1a]
+  depends_on    = [aws_internet_gateway.aws-igw, aws_eip.aws-eip-1a]
   tags = {
     Name = "${var.app_name}-ngw-1a"
   }
 }
 
-resource "aws_nat_gateway" "ngw-1b" {
-  allocation_id = aws_eip.eip-1b.id
+resource "aws_nat_gateway" "aws-ngw-1b" {
+  allocation_id = aws_eip.aws-eip-1b.id
   subnet_id     = aws_subnet.public-1b.id
-  depends_on    = [aws_internet_gateway.aws-igw, aws_eip.eip-1b]
+  depends_on    = [aws_internet_gateway.aws-igw, aws_eip.aws-eip-1b]
   tags = {
     Name = "${var.app_name}-ngw-1b"
   }
@@ -132,7 +132,7 @@ resource "aws_route_table" "private-1a" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.ngw-1a.id
+    nat_gateway_id = aws_nat_gateway.aws-ngw-1a.id
   }
 
   # TODO: Check if default local route is created
@@ -156,7 +156,7 @@ resource "aws_route_table" "private-1b" {
 
   route {
     cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.ngw-1b.id
+    nat_gateway_id = aws_nat_gateway.aws-ngw-1b.id
   }
 
   # TODO: Check if default local route is created
