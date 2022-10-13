@@ -162,19 +162,19 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1b" {
   depends_on = [aws_lb_listener.internal_listener]
 }
 
-resource "aws_lb_target_group_attachment" "external_alb_target_group_attachment_webserver" {
+resource "aws_lb_target_group_attachment" "external_alb_target_group_attachment_webserver_1b" {
   target_group_arn = aws_lb_target_group.external_alb_target_group.arn
   target_id        = aws_ecs_service.aws_ecs_service_webserver_1b.id
-  port             = 80
+  port             = var.microservices["webserver"].hostPort
 }
 
-resource "aws_lb_target_group_attachment" "internal_alb_target_group_attachment_authentication" {
+resource "aws_lb_target_group_attachment" "internal_alb_target_group_attachment_authentication_1b" {
   target_group_arn = aws_lb_target_group.internal_alb_target_group.arn
   target_id        = aws_ecs_service.aws_ecs_service_authentication_1b.id
   port             = var.microservices["authentication"].hostPort
 }
 
-resource "aws_lb_target_group_attachment" "internal_alb_target_group_attachment_users" {
+resource "aws_lb_target_group_attachment" "internal_alb_target_group_attachment_users_1b" {
   target_group_arn = aws_lb_target_group.internal_alb_target_group.arn
   target_id        = aws_ecs_service.aws_ecs_service_users_1b.id
   port             = var.microservices["users"].hostPort

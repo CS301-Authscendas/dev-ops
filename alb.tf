@@ -2,7 +2,7 @@
 
 resource "aws_lb" "external_alb" {
   name               = "${var.app_name}-external-alb"
-  internal           = false
+  internal           = true
   load_balancer_type = "application"
   subnets            = [aws_subnet.public_1b.id, aws_subnet.public_1a.id]
   security_groups    = [aws_security_group.alb_security_group.id]
@@ -20,11 +20,8 @@ resource "aws_lb" "internal_alb" {
   name               = "${var.app_name}-internal-alb"
   internal           = true
   load_balancer_type = "application"
-  subnets = concat(
-    [for subnet in aws_subnet.private_1a : subnet.id],
-    [for subnet in aws_subnet.private_1b : subnet.id]
-  )
-  security_groups = [aws_security_group.alb_security_group.id]
+  subnets            = [aws_subnet.private_1a[0].id, aws_subnet.private_1b[0].id]
+  security_groups    = [aws_security_group.alb_security_group.id]
 
   depends_on = [
     aws_subnet.private_1a, aws_subnet.private_1b
@@ -36,8 +33,8 @@ resource "aws_lb" "internal_alb" {
 }
 
 resource "aws_lb_target_group" "external_alb_target_group" {
-  name        = "${var.app_name}-external-tg"
-  port        = 80
+  name        = "${var.app_name}-external-tg-1"
+  port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.aws_vpc.id
@@ -61,8 +58,8 @@ resource "aws_lb_target_group" "external_alb_target_group" {
 }
 
 resource "aws_lb_target_group" "internal_alb_target_group" {
-  name        = "${var.app_name}-internal-tg"
-  port        = 80
+  name        = "${var.app_name}-internal-tg-1"
+  port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.aws_vpc.id
