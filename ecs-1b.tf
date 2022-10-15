@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1b" {
     [
         {
             "name" : "${var.app_name}-${each.key}-1b",
-            "image" : "${var.app_name}-ecr-${each.key}:latest",
+            "image" : "${var.app_name}-ecr-${each.key}-latest",
             "entryPoint" : [],
             "essential" : true,
             "logConfiguration" : {
