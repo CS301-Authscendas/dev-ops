@@ -73,7 +73,6 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.aws_igw.id
   }
 
-  # TODO: Check if default local route is created
   tags = {
     Name        = "${var.app_name}-routing-table-public"
     Environment = var.app_environment
@@ -90,6 +89,7 @@ resource "aws_route_table_association" "public_1b" {
   route_table_id = aws_route_table.public.id
 }
 
+# NOTE: Refer to https://stackoverflow.com/questions/61265108/aws-ecs-fargate-resourceinitializationerror-unable-to-pull-secrets-or-registry
 # ==== CONFIGURATION FOR NAT GATEWAY ==== #
 resource "aws_eip" "aws_eip_1a" {
   vpc = true
@@ -135,7 +135,6 @@ resource "aws_route_table" "private_1a" {
     nat_gateway_id = aws_nat_gateway.aws_ngw_1a.id
   }
 
-  # TODO: Check if default local route is created
   tags = {
     Name        = "${var.app_name}-routing-table-private-1a"
     Environment = var.app_environment
@@ -159,7 +158,6 @@ resource "aws_route_table" "private_1b" {
     nat_gateway_id = aws_nat_gateway.aws_ngw_1b.id
   }
 
-  # TODO: Check if default local route is created
   tags = {
     Name        = "${var.app_name}-routing-table-private-1b"
     Environment = var.app_environment
