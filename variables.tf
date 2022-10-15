@@ -10,19 +10,24 @@ variable "aws_secret_key" {
   description = "AWS Secret Key"
 }
 
-# variable "aws_key_pair_name" {
-#   type        = string
-#   description = "AWS Key Pair Name"
-# }
-
-# variable "aws_key_pair_file" {
-#   type = string
-#   description = "AWS Key Pair File"
-# }
-
 variable "aws_region" {
   type        = string
   description = "AWS Region"
+}
+
+variable "aws_replica_region" {
+  type        = string
+  description = "Alternate AWS Region"
+}
+
+variable "aws_mq_username" {
+  type        = string
+  description = "Username for RabbitMQ"
+}
+
+variable "aws_mq_password" {
+  type        = string
+  description = "Password for RabbitMQ"
 }
 
 variable "app_name" {
