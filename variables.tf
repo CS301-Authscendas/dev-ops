@@ -40,9 +40,9 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
-variable "cidr" {
-  description = "The CIDR block for the VPC."
-  default     = "10.0.0.0/16"
+variable "app_domain" {
+  type        = string
+  description = "Application Domain Name"
 }
 
 variable "public_subnets_1a" {
