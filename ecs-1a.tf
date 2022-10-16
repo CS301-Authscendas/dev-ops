@@ -108,12 +108,6 @@ resource "aws_ecs_service" "aws_ecs_service_users_1a" {
     ]
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.internal_alb_target_group.arn
-    container_name   = "${var.app_name}-users-1a"
-    container_port   = var.microservices["users"].containerPort
-  }
-
   depends_on = [aws_lb_listener.internal_listener]
 }
 
