@@ -30,11 +30,10 @@ resource "aws_subnet" "public_1a" {
 
 resource "aws_subnet" "private_1a" {
   vpc_id            = aws_vpc.aws_vpc.id
-  count             = length(var.private_subnets_1a)
-  cidr_block        = element(var.private_subnets_1a, count.index)
+  cidr_block        = var.private_subnets_1a
   availability_zone = var.availability_zones[0]
   tags = {
-    Name        = "${var.app_name}-private-subnet-1a-${var.clusters[count.index]}"
+    Name        = "${var.app_name}-private-subnet-1a"
     Environment = var.app_environment
   }
 }
@@ -52,11 +51,10 @@ resource "aws_subnet" "public_1b" {
 
 resource "aws_subnet" "private_1b" {
   vpc_id            = aws_vpc.aws_vpc.id
-  count             = length(var.private_subnets_1b)
-  cidr_block        = element(var.private_subnets_1b, count.index)
+  cidr_block        = var.private_subnets_1b
   availability_zone = var.availability_zones[1]
   tags = {
-    Name        = "${var.app_name}-private-subnet-1b-${var.clusters[count.index]}"
+    Name        = "${var.app_name}-private-subnet-1b"
     Environment = var.app_environment
   }
 }
@@ -142,8 +140,7 @@ resource "aws_route_table" "private_1a" {
 }
 
 resource "aws_route_table_association" "private_1a" {
-  count          = length(var.private_subnets_1a)
-  subnet_id      = element(aws_subnet.private_1a.*.id, count.index)
+  subnet_id      = aws_subnet.private_1a.id
   route_table_id = aws_route_table.private_1a.id
 }
 
@@ -165,7 +162,6 @@ resource "aws_route_table" "private_1b" {
 }
 
 resource "aws_route_table_association" "private_1b" {
-  count          = length(var.private_subnets_1b)
-  subnet_id      = element(aws_subnet.private_1b.*.id, count.index)
+  subnet_id      = aws_subnet.private_1b.id
   route_table_id = aws_route_table.private_1b.id
 }

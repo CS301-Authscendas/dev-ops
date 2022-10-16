@@ -1,6 +1,6 @@
 # s3.tf | S3 Bucket Configuration
 
-resource "aws_s3_bucket" "s3_bucket-excel" {
+resource "aws_s3_bucket" "s3_bucket_excel" {
   bucket = "${var.app_name}-excel"
 
   tags = {

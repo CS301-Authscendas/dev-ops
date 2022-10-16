@@ -62,12 +62,12 @@ variable "public_subnets_1b" {
 
 variable "private_subnets_1a" {
   description = "List of private subnets for Availability Zone (1a)"
-  type        = list(string)
+  type        = string
 }
 
 variable "private_subnets_1b" {
   description = "List of private subnets for Availability Zone (1a)"
-  type        = list(string)
+  type        = string
 }
 
 variable "availability_zones" {

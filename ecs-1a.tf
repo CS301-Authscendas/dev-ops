@@ -99,7 +99,7 @@ resource "aws_ecs_service" "aws_ecs_service_users_1a" {
   force_new_deployment = true
 
   network_configuration {
-    subnets          = aws_subnet.private_1a.*.id
+    subnets          = [aws_subnet.private_1a.id]
     assign_public_ip = false
     security_groups = [
       aws_security_group.ecs_security_group.id,
@@ -126,7 +126,7 @@ resource "aws_ecs_service" "aws_ecs_service_notifications_1a" {
   force_new_deployment = true
 
   network_configuration {
-    subnets          = aws_subnet.private_1a.*.id
+    subnets          = [aws_subnet.private_1a.id]
     assign_public_ip = false
     security_groups = [
       aws_security_group.ecs_security_group.id,
@@ -145,7 +145,7 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1a" {
   force_new_deployment = true
 
   network_configuration {
-    subnets          = aws_subnet.private_1a.*.id
+    subnets          = [aws_subnet.private_1a.id]
     assign_public_ip = false
     security_groups = [
       aws_security_group.ecs_security_group.id,

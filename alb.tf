@@ -20,7 +20,7 @@ resource "aws_lb" "internal_alb" {
   name               = "${var.app_name}-internal-alb"
   internal           = true
   load_balancer_type = "application"
-  subnets            = [aws_subnet.private_1a[0].id, aws_subnet.private_1b[0].id]
+  subnets            = [aws_subnet.private_1a.id, aws_subnet.private_1b.id]
   security_groups    = [aws_security_group.alb_security_group.id]
 
   depends_on = [
