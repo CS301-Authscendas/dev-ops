@@ -30,6 +30,11 @@ variable "aws_mq_password" {
   description = "Password for RabbitMQ"
 }
 
+variable "aws_ses_email" {
+  type        = string
+  description = "Email Address for AWS SES"
+}
+
 variable "app_name" {
   type        = string
   description = "Application Name"
