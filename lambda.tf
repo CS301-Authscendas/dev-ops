@@ -41,6 +41,15 @@ resource "aws_iam_policy" "lambda_policy" {
         Effect   = "Allow"
         Resource = "*"
       },
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ],
+        Effect   = "Allow",
+        Resource = "arn:aws:logs:*:*:*"
+      }
     ]
   })
 }
