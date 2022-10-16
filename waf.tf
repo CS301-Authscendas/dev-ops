@@ -1,5 +1,5 @@
 # waf.tf | Web Application Firewall Configuration
-resource "aws_wafv2_web_acl" "example" {
+resource "aws_wafv2_web_acl" "waf" {
   name        = "CS301-ALB-WAF"
   description = "CS301 ALB WAF"
   scope       = "REGIONAL"
@@ -147,6 +147,6 @@ resource "aws_wafv2_web_acl" "example" {
 }
 
 resource "aws_wafv2_web_acl_association" "example" {
-  resource_arn = aws_lb.external_alb
-  web_acl_arn  = aws_wafv2_web_acl.example.arn
+  resource_arn = aws_lb.external_alb.arn
+  web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
