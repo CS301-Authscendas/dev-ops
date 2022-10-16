@@ -3,3 +3,7 @@
 *.tfvars
 *.lock.hcl
 .terraform
+venv
+package
+lambda_upload.zip
+.DS_Store
