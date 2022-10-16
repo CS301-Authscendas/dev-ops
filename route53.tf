@@ -16,3 +16,21 @@ resource "aws_route53_record" "www" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_route53_record" "nameservers" {
+  zone_id         = aws_route53_zone.domain.zone_id
+  name            = var.app_domain
+  allow_overwrite = true
+  ttl             = 172800
+  type            = "NS"
+  records         = var.app_domain_ns
+}
+
+resource "aws_route53_record" "start_of_authority" {
+  zone_id         = aws_route53_zone.domain.zone_id
+  name            = var.app_domain
+  allow_overwrite = true
+  ttl             = 3600
+  type            = "SOA"
+  records         = [var.app_domain_soa]
+}
