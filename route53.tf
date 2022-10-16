@@ -5,9 +5,10 @@ resource "aws_route53_zone" "domain" {
 }
 
 resource "aws_route53_record" "www" {
-  zone_id = aws_route53_zone.domain.zone_id
-  name    = var.app_domain
-  type    = "A"
+  zone_id         = aws_route53_zone.domain.zone_id
+  name            = var.app_domain
+  allow_overwrite = true
+  type            = "A"
 
   alias {
     name                   = aws_lb.external_alb.dns_name

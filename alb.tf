@@ -2,9 +2,9 @@
 
 resource "aws_lb" "external_alb" {
   name               = "${var.app_name}-external-alb"
-  internal           = true
+  internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.public_1b.id, aws_subnet.public_1a.id]
+  subnets            = [aws_subnet.public_1a.id, aws_subnet.public_1b.id]
   security_groups    = [aws_security_group.alb_security_group.id]
 
   depends_on = [
