@@ -1,3 +1,5 @@
+# ses.tf | Simple Email Service Configuration
+
 resource "aws_ses_template" "Register_email_template" {
   name    = "Register_email_template"
   subject = "Welcome, {{name}}!"
