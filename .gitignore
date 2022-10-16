@@ -6,3 +6,4 @@
 venv
 package
 .DS_Store
+.vscode

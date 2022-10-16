@@ -3,13 +3,13 @@
 resource "aws_security_group" "alb_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
-  ingress {
-    from_port        = 443
-    to_port          = 443
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
+  #   ingress {
+  #     from_port        = 443
+  #     to_port          = 443
+  #     protocol         = "tcp"
+  #     cidr_blocks      = ["0.0.0.0/0"]
+  #     ipv6_cidr_blocks = ["::/0"]
+  #   }
 
   ingress {
     from_port   = 80
@@ -26,7 +26,7 @@ resource "aws_security_group" "alb_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name        = "${var.app_name}-sg"
+    Name        = "${var.app_name}-alb-sg"
     Environment = var.app_environment
   }
 }

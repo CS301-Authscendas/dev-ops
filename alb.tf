@@ -17,8 +17,9 @@ resource "aws_lb" "external_alb" {
 }
 
 resource "aws_lb" "internal_alb" {
-  name               = "${var.app_name}-internal-alb"
-  internal           = true
+  name = "${var.app_name}-internal-alb"
+  // TODO: Change back to internal after testing
+  internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.private_1a.id, aws_subnet.private_1b.id]
   security_groups    = [aws_security_group.alb_security_group.id]
