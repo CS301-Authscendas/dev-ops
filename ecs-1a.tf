@@ -38,6 +38,7 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1a" {
                     "containerPort" : ${each.value.containerPort}
                 }
             ],
+            "environment": ${jsonencode(var.microservices_env_config[each.key])},
             "cpu" : ${each.value.indivdualCpu},
             "memory" : ${each.value.individualMemory},
             "networkMode" : "awsvpc"

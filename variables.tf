@@ -90,16 +90,10 @@ variable "microservices" {
     individualMemory = number
     totalCpu         = number
     totalMemory      = number
-    index            = number
   }))
 }
 
-# variable "database_name" {
-#   description = "Database Name"
-#   type        = string
-# }
-
-# variable "database_password" {
-#   description = "Database Password"
-#   type        = string
-# }
+variable "microservices_env_config" {
+  description = "List of microservices environment variables"
+  type        = map(any)
+}
