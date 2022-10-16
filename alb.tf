@@ -33,7 +33,7 @@ resource "aws_lb" "internal_alb" {
 }
 
 resource "aws_lb_target_group" "external_alb_target_group" {
-  name        = "${var.app_name}-external-tg-1"
+  name        = "${var.app_name}-external-tg"
   port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
@@ -45,7 +45,7 @@ resource "aws_lb_target_group" "external_alb_target_group" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/healthcheck"
+    path                = "/api/healthcheck"
     unhealthy_threshold = "2"
   }
   lifecycle {
@@ -58,7 +58,7 @@ resource "aws_lb_target_group" "external_alb_target_group" {
 }
 
 resource "aws_lb_target_group" "internal_alb_target_group" {
-  name        = "${var.app_name}-internal-tg-1"
+  name        = "${var.app_name}-internal-tg"
   port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
