@@ -29,13 +29,6 @@ resource "aws_iam_policy" "lambda_policy" {
     Statement = [
       {
         Action = [
-          "s3:PutObject",
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-      {
-        Action = [
           "dynamodb:PutItem",
         ]
         Effect   = "Allow"
@@ -63,7 +56,7 @@ resource "aws_lambda_function" "lambda_upload" {
   filename         = "lambda_upload.zip"
   function_name    = "lambda_upload"
   role             = aws_iam_role.lambda_execution_role.arn
-  handler          = "lambda_upload"
+  handler          = "lambda_function.lambda_upload"
   source_code_hash = filebase64sha256("lambda_upload.zip")
   runtime          = "python3.9"
 

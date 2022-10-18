@@ -128,10 +128,11 @@ resource "aws_route_table" "private_1a" {
     aws_internet_gateway.aws_igw
   ]
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.aws_ngw_1a.id
-  }
+  // TODO: Add back after development
+  #   route {
+  #     cidr_block     = "0.0.0.0/0"
+  #     nat_gateway_id = aws_nat_gateway.aws_ngw_1a.id
+  #   }
 
   // TODO: Remove after development
   route {
@@ -156,9 +157,16 @@ resource "aws_route_table" "private_1b" {
     aws_internet_gateway.aws_igw
   ]
 
+  // TODO: Add back after development
+  #   route {
+  #     cidr_block     = "0.0.0.0/0"
+  #     nat_gateway_id = aws_nat_gateway.aws_ngw_1a.id
+  #   }
+
+  // TODO: Remove after development
   route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.aws_ngw_1b.id
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.aws_igw.id
   }
 
   tags = {
