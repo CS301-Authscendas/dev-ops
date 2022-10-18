@@ -8,7 +8,7 @@ import boto3
 def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
 
-    if context.requestContext == "OPTIONS":
+    if event.requestContext == "OPTIONS":
         return {
             "statusCode": 200,
             "body": "ok"
