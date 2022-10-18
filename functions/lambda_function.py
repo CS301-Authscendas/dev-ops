@@ -9,7 +9,6 @@ def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
 
     s3 = boto3.client("s3")
-    db = boto3.client("dynamodb")
 
     try:
         bucket_name = os.getenv("BUCKET_NAME")
