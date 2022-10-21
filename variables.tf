@@ -10,6 +10,11 @@ variable "aws_secret_key" {
   description = "AWS Secret Key"
 }
 
+variable "aws_profile" {
+  type        = string
+  description = "AWS Credentials Profile"
+}
+
 variable "aws_region" {
   type        = string
   description = "AWS Region"
