@@ -6,9 +6,9 @@ import boto3
 
 def lambda_upload(event, context):
     # print("Received event: " + json.dumps(event, indent=2))
-    print("Context: ", event["requestContext"], event["requestContext"].method)
+    print("Context: ", event["requestContext"])
 
-    if event["requestContext"].method == "OPTIONS":
+    if event["requestContext"]["http"]["method"] == "OPTIONS":
         return {"statusCode": 200, "body": "ok"}
 
     s3 = boto3.client("s3")
