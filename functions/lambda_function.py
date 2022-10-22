@@ -1,3 +1,4 @@
+import base64
 import io
 import os
 
@@ -14,6 +15,8 @@ def lambda_upload(event, context):
     try:
         bucket_name = os.getenv("BUCKET_NAME")
         file_name = "test"
+
+        print(base64.b64decode(event["body"]))
 
         file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
 
