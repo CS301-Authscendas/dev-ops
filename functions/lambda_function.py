@@ -12,14 +12,11 @@ def lambda_upload(event, context):
 
     s3 = boto3.client("s3")
 
-    if "body" in event:
-        print(event["body"])
-
     try:
         bucket_name = os.getenv("BUCKET_NAME")
         file_name = "test"
 
-        file = io.BytesIO(bytes(event["file_content"], encoding="utf-8"))
+        file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
         print(file)
 
         bucket = s3.Bucket(bucket_name)
