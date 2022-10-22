@@ -5,6 +5,7 @@ import boto3
 
 
 def lambda_upload(event, context):
+    print(event)
     if event["requestContext"]["http"]["method"] == "OPTIONS":
         return {"statusCode": 200, "body": "ok"}
 
@@ -15,8 +16,6 @@ def lambda_upload(event, context):
         file_name = "test"
 
         file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
-        print(file)
-        print(file.getbuffer(), file.getvalue())
 
         bucket = s3.Bucket(bucket_name)
         bucket_object = bucket.Object(file_name)
