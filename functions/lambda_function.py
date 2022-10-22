@@ -5,7 +5,7 @@ import os
 import boto3
 
 
-def lambda_handler(event, context):
+def lambda_upload(event, context):
     print("Received event: " + json.dumps(event, indent=2))
     print("Context: ", context)
 
