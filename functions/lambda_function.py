@@ -16,7 +16,7 @@ def lambda_upload(event, context):
 
         file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
         print(file)
-        print(file.getbuffer())
+        print(file.getbuffer(), file.getvalue())
 
         bucket = s3.Bucket(bucket_name)
         bucket_object = bucket.Object(file_name)
