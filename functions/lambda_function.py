@@ -1,18 +1,16 @@
 import io
-import os
 import json
+import os
 
 import boto3
 
 
 def lambda_handler(event, context):
     print("Received event: " + json.dumps(event, indent=2))
+    print("Context: ", context)
 
     if event.requestContext == "OPTIONS":
-        return {
-            "statusCode": 200,
-            "body": "ok"
-        }
+        return {"statusCode": 200, "body": "ok"}
 
     s3 = boto3.client("s3")
 
