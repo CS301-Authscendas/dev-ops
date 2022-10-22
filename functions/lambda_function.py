@@ -10,7 +10,7 @@ def lambda_upload(event, context):
     if event["requestContext"]["http"]["method"] == "OPTIONS":
         return {"statusCode": 200, "body": "ok"}
 
-    s3 = boto3.client("s3")
+    s3 = boto3.resource("s3")
 
     try:
         bucket_name = os.getenv("BUCKET_NAME")
