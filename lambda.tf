@@ -32,7 +32,7 @@ resource "aws_iam_policy" "lambda_policy" {
           "s3:PutObject",
         ]
         Effect   = "Allow"
-        Resource = "*"
+        Resource = "arn:aws:s3:::${var.app_name}-excel/*"
       },
       {
         Action = [
@@ -42,6 +42,15 @@ resource "aws_iam_policy" "lambda_policy" {
         ],
         Effect   = "Allow",
         Resource = "arn:aws:logs:*:*:*"
+      },
+      {
+        Action = [
+          "kms:DescribeKey",
+          "kms:GenerateDataKey",
+          "kms:Decrypt"
+        ],
+        Effect   = "Allow",
+        Resource = "*"
       }
     ]
   })
