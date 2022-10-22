@@ -1,4 +1,5 @@
 import base64
+import email.parser
 import io
 import os
 
@@ -16,7 +17,16 @@ def lambda_upload(event, context):
         bucket_name = os.getenv("BUCKET_NAME")
         file_name = "test"
 
-        print(base64.b64decode(event["body"]))
+        test = email.parser.BytesParser().parsebytes(base64.b64decode(event["body"]))
+        print(test)
+        print(
+            {
+                part.get_param("name", header="content-disposition"): part.get_payload(
+                    decode=True
+                )
+                for part in test.get_payload()
+            }
+        )
 
         file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
 
@@ -27,8 +37,11 @@ def lambda_upload(event, context):
         print("Upload Successful")
         return {
             "statusCode": 200,
-            "body": f"Upload succeeded: {file_name} has been uploaded to Amazon S3 in bucket {bucket_name}",
+            "body": f"Upload succeeded: {file_name} has been uploaded to Amazon S3",
         }
     except FileNotFoundError:
         print("The file was not found")
-        return None
+        return {
+            "statusCode": 404,
+            "body": "The file was not found",
+        }
