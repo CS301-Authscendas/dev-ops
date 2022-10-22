@@ -7,7 +7,7 @@ resource "aws_s3_bucket" "s3_bucket_excel" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["POST"]
-    allowed_origins = [var.app_domain]
+    allowed_origins = [var.app_domain, "http://localhost:8000"]
   }
 
   server_side_encryption_configuration {

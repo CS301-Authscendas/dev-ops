@@ -22,14 +22,14 @@ resource "aws_iam_role" "lambda_execution_role" {
 
 resource "aws_iam_policy" "lambda_policy" {
   name        = "${var.app_name}-lambda-policy"
-  description = "Lambda Policy for S3 and DynamoDB"
+  description = "Lambda Policy for S3"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Action = [
-          "dynamodb:PutItem",
+          "s3:PutObject",
         ]
         Effect   = "Allow"
         Resource = "*"
@@ -70,4 +70,12 @@ resource "aws_lambda_function" "lambda_upload" {
 resource "aws_lambda_function_url" "lambda_function_url" {
   function_name      = aws_lambda_function.lambda_upload.function_name
   authorization_type = "NONE"
+
+  cors {
+    allow_credentials = true
+    allow_origins     = ["*"]
+    allow_methods     = ["*"]
+    allow_headers     = ["*"]
+    max_age           = 86400
+  }
 }
