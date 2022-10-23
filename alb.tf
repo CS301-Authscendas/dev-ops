@@ -4,11 +4,11 @@ resource "aws_lb" "web_alb" {
   name               = "${var.app_name}-web-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.public_1a.id, aws_subnet.public_1b.id]
+  subnets            = [aws_subnet.web_1a.id, aws_subnet.web_1b.id]
   security_groups    = [aws_security_group.alb_security_group.id]
 
   depends_on = [
-    aws_subnet.public_1a, aws_subnet.public_1b
+    aws_subnet.web_1a, aws_subnet.web_1b
   ]
   tags = {
     Name        = "${var.app_name}-web-alb"
@@ -20,11 +20,11 @@ resource "aws_lb" "authentication_alb" {
   name               = "${var.app_name}-authentication-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.private_1a.id, aws_subnet.private_1b.id]
+  subnets            = [aws_subnet.authentication_1a.id, aws_subnet.authentication_1b.id]
   security_groups    = [aws_security_group.alb_security_group.id]
 
   depends_on = [
-    aws_subnet.private_1a, aws_subnet.private_1b
+    aws_subnet.authentication_1a, aws_subnet.authentication_1b
   ]
   tags = {
     Name        = "${var.app_name}-authentication-alb"

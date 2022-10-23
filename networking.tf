@@ -18,7 +18,7 @@ resource "aws_internet_gateway" "aws_igw" {
 }
 
 # ==== CONFIGURATION FOR AVAILABILITY ZONE 1A ==== #
-resource "aws_subnet" "public_1a" {
+resource "aws_subnet" "web_1a" {
   vpc_id            = aws_vpc.aws_vpc.id
   cidr_block        = var.web_subnets_1a
   availability_zone = var.availability_zones[0]
@@ -28,39 +28,39 @@ resource "aws_subnet" "public_1a" {
   }
 }
 
-resource "aws_subnet" "private_1a" {
+resource "aws_subnet" "authentication_1a" {
   vpc_id            = aws_vpc.aws_vpc.id
   cidr_block        = var.authentication_subnets_1a
   availability_zone = var.availability_zones[0]
   tags = {
-    Name        = "${var.app_name}-private-subnet-1a"
+    Name        = "${var.app_name}-authentication-1a"
     Environment = var.app_environment
   }
 }
 
 # ==== CONFIGURATION FOR AVAILABILITY ZONE 1B ==== #
-resource "aws_subnet" "public_1b" {
+resource "aws_subnet" "web_1b" {
   vpc_id            = aws_vpc.aws_vpc.id
   cidr_block        = var.web_subnets_1b
   availability_zone = var.availability_zones[1]
   tags = {
-    Name        = "${var.app_name}-public-subnet-1b"
+    Name        = "${var.app_name}-web-1b"
     Environment = var.app_environment
   }
 }
 
-resource "aws_subnet" "private_1b" {
+resource "aws_subnet" "authentication_1b" {
   vpc_id            = aws_vpc.aws_vpc.id
   cidr_block        = var.authentication_subnets_1b
   availability_zone = var.availability_zones[1]
   tags = {
-    Name        = "${var.app_name}-private-subnet-1b"
+    Name        = "${var.app_name}-authentication-1b"
     Environment = var.app_environment
   }
 }
 
 # ==== CONFIGURATION FOR ROUTING TABLE ==== #
-resource "aws_route_table" "public" {
+resource "aws_route_table" "web" {
   vpc_id = aws_vpc.aws_vpc.id
   depends_on = [
     aws_internet_gateway.aws_igw
@@ -72,110 +72,79 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name        = "${var.app_name}-routing-table-public"
+    Name        = "${var.app_name}-routing-table-web"
     Environment = var.app_environment
   }
 }
 
-resource "aws_route_table_association" "public_1a" {
-  subnet_id      = aws_subnet.public_1a.id
-  route_table_id = aws_route_table.public.id
+resource "aws_route_table_association" "web_1a" {
+  subnet_id      = aws_subnet.web_1a.id
+  route_table_id = aws_route_table.web.id
 }
 
-resource "aws_route_table_association" "public_1b" {
-  subnet_id      = aws_subnet.public_1b.id
-  route_table_id = aws_route_table.public.id
+resource "aws_route_table_association" "web_1b" {
+  subnet_id      = aws_subnet.web_1b.id
+  route_table_id = aws_route_table.web.id
 }
 
 # NOTE: Refer to https://stackoverflow.com/questions/61265108/aws-ecs-fargate-resourceinitializationerror-unable-to-pull-secrets-or-registry
 # ==== CONFIGURATION FOR NAT GATEWAY ==== #
-resource "aws_eip" "aws_eip_1a" {
-  vpc = true
-  tags = {
-    Name = "${var.app_name}-eip-1a"
-  }
-}
+# resource "aws_eip" "aws_eip_1a" {
+#   vpc = true
+#   tags = {
+#     Name = "${var.app_name}-eip-1a"
+#   }
+# }
 
-resource "aws_eip" "aws_eip_1b" {
-  vpc = true
-  tags = {
-    Name = "${var.app_name}-eip-1b"
-  }
-}
+# resource "aws_eip" "aws_eip_1b" {
+#   vpc = true
+#   tags = {
+#     Name = "${var.app_name}-eip-1b"
+#   }
+# }
 
-resource "aws_nat_gateway" "aws_ngw_1a" {
-  allocation_id = aws_eip.aws_eip_1a.id
-  subnet_id     = aws_subnet.public_1a.id
-  depends_on    = [aws_internet_gateway.aws_igw, aws_eip.aws_eip_1a]
-  tags = {
-    Name = "${var.app_name}-ngw-1a"
-  }
-}
+# resource "aws_nat_gateway" "aws_ngw_1a" {
+#   allocation_id = aws_eip.aws_eip_1a.id
+#   subnet_id     = aws_subnet.web_1a.id
+#   depends_on    = [aws_internet_gateway.aws_igw, aws_eip.aws_eip_1a]
+#   tags = {
+#     Name = "${var.app_name}-ngw-1a"
+#   }
+# }
 
-resource "aws_nat_gateway" "aws_ngw_1b" {
-  allocation_id = aws_eip.aws_eip_1b.id
-  subnet_id     = aws_subnet.public_1b.id
-  depends_on    = [aws_internet_gateway.aws_igw, aws_eip.aws_eip_1b]
-  tags = {
-    Name = "${var.app_name}-ngw-1b"
-  }
-}
+# resource "aws_nat_gateway" "aws_ngw_1b" {
+#   allocation_id = aws_eip.aws_eip_1b.id
+#   subnet_id     = aws_subnet.web_1b.id
+#   depends_on    = [aws_internet_gateway.aws_igw, aws_eip.aws_eip_1b]
+#   tags = {
+#     Name = "${var.app_name}-ngw-1b"
+#   }
+# }
 
 # ==== CONFIGURATION FOR PRIVATE ROUTE TABLE ==== #
-resource "aws_route_table" "private_1a" {
+resource "aws_route_table" "authentication" {
   vpc_id = aws_vpc.aws_vpc.id
   depends_on = [
     aws_internet_gateway.aws_igw
   ]
 
-  // TODO: Add back after development
-  #   route {
-  #     cidr_block     = "0.0.0.0/0"
-  #     nat_gateway_id = aws_nat_gateway.aws_ngw_1a.id
-  #   }
-
-  // TODO: Remove after development
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.aws_igw.id
   }
 
   tags = {
-    Name        = "${var.app_name}-routing-table-private-1a"
+    Name        = "${var.app_name}-routing-table-authentication"
     Environment = var.app_environment
   }
 }
 
-resource "aws_route_table_association" "private_1a" {
-  subnet_id      = aws_subnet.private_1a.id
-  route_table_id = aws_route_table.private_1a.id
+resource "aws_route_table_association" "authentication_1a" {
+  subnet_id      = aws_subnet.authentication_1a.id
+  route_table_id = aws_route_table.authentication.id
 }
 
-resource "aws_route_table" "private_1b" {
-  vpc_id = aws_vpc.aws_vpc.id
-  depends_on = [
-    aws_internet_gateway.aws_igw
-  ]
-
-  // TODO: Add back after development
-  #   route {
-  #     cidr_block     = "0.0.0.0/0"
-  #     nat_gateway_id = aws_nat_gateway.aws_ngw_1a.id
-  #   }
-
-  // TODO: Remove after development
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.aws_igw.id
-  }
-
-  tags = {
-    Name        = "${var.app_name}-routing-table-private-1b"
-    Environment = var.app_environment
-  }
-}
-
-resource "aws_route_table_association" "private_1b" {
-  subnet_id      = aws_subnet.private_1b.id
-  route_table_id = aws_route_table.private_1b.id
+resource "aws_route_table_association" "authentication_1b" {
+  subnet_id      = aws_subnet.authentication_1b.id
+  route_table_id = aws_route_table.authentication.id
 }
