@@ -38,7 +38,10 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1a" {
                     "containerPort" : ${each.value.containerPort}
                 }
             ],
-            "environment": ${jsonencode(var.microservices_env_config[each.key])},
+            "environment_files": [{
+                "type" : "s3",
+                "value" : "${aws_s3_bucket.s3_bucket_secrets.arn}/${each.key}/.env"
+            }],
             "cpu" : ${each.value.indivdualCpu},
             "memory" : ${each.value.individualMemory},
             "networkMode" : "awsvpc"

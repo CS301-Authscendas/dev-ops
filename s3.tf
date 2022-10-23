@@ -36,3 +36,18 @@ resource "aws_s3_bucket_versioning" "s3_bucket_versioning_excel" {
 resource "aws_kms_key" "s3_key" {
   description = "Used to encrypt bucket objects"
 }
+
+resource "aws_s3_bucket" "s3_bucket_secrets" {
+  bucket = "${var.app_name}-secrets"
+  #   force_destroy = true
+
+  // TODO: Remove after development
+  lifecycle {
+    prevent_destroy = true
+  }
+
+  tags = {
+    Name        = "${var.app_name}-secrets"
+    Environment = var.app_environment
+  }
+}
