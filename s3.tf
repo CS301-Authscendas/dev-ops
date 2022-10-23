@@ -2,26 +2,36 @@
 
 resource "aws_s3_bucket" "s3_bucket_excel" {
   bucket        = "${var.app_name}-excel"
-  acl           = "public-read-write"
   force_destroy = true
+
+  tags = {
+    Name        = "${var.app_name}-excel"
+    Environment = var.app_environment
+  }
+}
+
+resource "aws_s3_bucket_acl" "s3_bucket_excel_acl" {
+  bucket = aws_s3_bucket.s3_bucket_excel.id
+  acl    = "public-read-write"
+}
+
+resource "aws_s3_bucket_cors_configuration" "s3_bucket_excel_cors" {
+  bucket = aws_s3_bucket.s3_bucket_excel.id
+
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["POST"]
     allowed_origins = [var.app_domain, "http://localhost:8000"]
   }
+}
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        kms_master_key_id = aws_kms_key.s3_key.arn
-        sse_algorithm     = "aws:kms"
-      }
+resource "aws_s3_bucket_server_side_encryption_configuration" "s3_bucket_excel_configuration" {
+  bucket = aws_s3_bucket.s3_bucket_excel.bucket
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.s3_key.arn
+      sse_algorithm     = "aws:kms"
     }
-  }
-
-  tags = {
-    Name        = "${var.app_name}-excel"
-    Environment = var.app_environment
   }
 }
 
@@ -38,13 +48,8 @@ resource "aws_kms_key" "s3_key" {
 }
 
 resource "aws_s3_bucket" "s3_bucket_secrets" {
-  bucket = "${var.app_name}-secrets"
-  #   force_destroy = true
-
-  // TODO: Remove after development
-  lifecycle {
-    prevent_destroy = true
-  }
+  bucket        = "${var.app_name}-secrets"
+  force_destroy = true
 
   tags = {
     Name        = "${var.app_name}-secrets"
