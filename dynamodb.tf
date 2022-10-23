@@ -16,7 +16,7 @@ resource "aws_dynamodb_table" "users" {
   }
 
   global_secondary_index {
-    name            = "GameTitleIndex"
+    name            = "EmailUUIDIndex"
     hash_key        = "email"
     range_key       = "UUID"
     projection_type = "ALL"
