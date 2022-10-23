@@ -1,9 +1,9 @@
 import base64
+import cgi
 import io
 import os
 
 import boto3
-from requests_toolbelt.multipart import decoder
 
 
 def lambda_upload(event, context):
@@ -16,20 +16,23 @@ def lambda_upload(event, context):
     try:
         bucket_name = os.getenv("BUCKET_NAME")
         file_name = "test.xlsx"
+        content_type_header = event["headers"]["content-type"]
+        body = base64.b64decode(event["body"])
 
-        multipart_data = decoder.MultipartDecoder.from_response(
-            base64.b64decode(event["body"])
-        )
-        print(multipart_data)
-        for part in multipart_data.parts:
-            print(part.content)  # Alternatively, part.text if you want unicode
-            print(part.headers)
+        fp = io.BytesIO(body.encode("utf-8"))
+        pdict = cgi.parse_header(content_type_header)[1]
 
-        file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
+        if "boundary" in pdict:
+            pdict["boundary"] = pdict["boundary"].encode("utf-8")
+        pdict["CONTENT-LENGTH"] = len(body)
+        form_data = cgi.parse_multipart(fp, pdict)
+        print("form_data=", form_data)
 
-        bucket = s3.Bucket(bucket_name)
-        bucket_object = bucket.Object(file_name)
-        bucket_object.upload_fileobj(file)
+        # file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
+
+        # bucket = s3.Bucket(bucket_name)
+        # bucket_object = bucket.Object(file_name)
+        # bucket_object.upload_fileobj(file)
 
         print("Upload Successful")
         return {
