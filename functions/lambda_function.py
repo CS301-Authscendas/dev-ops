@@ -15,7 +15,6 @@ def lambda_upload(event, context):
 
     try:
         bucket_name = os.getenv("BUCKET_NAME")
-        file_name = "test.xlsx"
         content_type_header = event["headers"]["content-type"]
         body = base64.b64decode(event["body"])
 
@@ -28,11 +27,12 @@ def lambda_upload(event, context):
         form_data = cgi.parse_multipart(fp, pdict)
         print("form_data=", form_data)
 
-        # file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
+        file = io.BytesIO(bytes(form_data["file"], encoding="utf-8"))
+        file_name = form_data["file_name"]
 
-        # bucket = s3.Bucket(bucket_name)
-        # bucket_object = bucket.Object(file_name)
-        # bucket_object.upload_fileobj(file)
+        bucket = s3.Bucket(bucket_name)
+        bucket_object = bucket.Object(file_name + ".xlsx")
+        bucket_object.upload_fileobj(file)
 
         print("Upload Successful")
         return {
