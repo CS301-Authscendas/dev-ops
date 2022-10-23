@@ -19,7 +19,7 @@ resource "aws_dynamodb_table" "users" {
     name            = "GameTitleIndex"
     hash_key        = "email"
     range_key       = "UUID"
-    projection_type = "INCLUDE"
+    projection_type = "ALL"
   }
   # TODO: Mention this feature explicitly
   #   replica {
