@@ -18,7 +18,11 @@ def lambda_upload(event, context):
         file_name = "test"
 
         test = email.parser.BytesParser().parsebytes(base64.b64decode(event["body"]))
-        print(test, test.get_filename(), test.get_param("name"))
+        print(
+            test.get_param("name", header="content-disposition"),
+            test.get_param("filename", header="content-disposition"),
+            test.get_payload(decode=True),
+        )
 
         file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
 
