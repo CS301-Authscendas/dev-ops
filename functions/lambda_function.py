@@ -15,7 +15,7 @@ def lambda_upload(event, context):
 
     try:
         bucket_name = os.getenv("BUCKET_NAME")
-        file_name = "test"
+        file_name = "test.xlsx"
 
         test = email.parser.BytesParser().parsebytes(base64.b64decode(event["body"]))
         print(
