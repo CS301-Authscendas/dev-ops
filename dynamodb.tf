@@ -18,6 +18,7 @@ resource "aws_dynamodb_table" "users" {
   global_secondary_index {
     name            = "IDIndex"
     hash_key        = "id"
+    projection_type = "ALL"
   }
   # TODO: Mention this feature explicitly
   #   replica {

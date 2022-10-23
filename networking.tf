@@ -20,7 +20,7 @@ resource "aws_internet_gateway" "aws_igw" {
 # ==== CONFIGURATION FOR AVAILABILITY ZONE 1A ==== #
 resource "aws_subnet" "public_1a" {
   vpc_id            = aws_vpc.aws_vpc.id
-  cidr_block        = var.public_subnets_1a
+  cidr_block        = var.web_subnets_1a
   availability_zone = var.availability_zones[0]
   tags = {
     Name        = "${var.app_name}-public-subnet-1a"
@@ -30,7 +30,7 @@ resource "aws_subnet" "public_1a" {
 
 resource "aws_subnet" "private_1a" {
   vpc_id            = aws_vpc.aws_vpc.id
-  cidr_block        = var.private_subnets_1a
+  cidr_block        = var.authentication_subnets_1a
   availability_zone = var.availability_zones[0]
   tags = {
     Name        = "${var.app_name}-private-subnet-1a"
@@ -41,7 +41,7 @@ resource "aws_subnet" "private_1a" {
 # ==== CONFIGURATION FOR AVAILABILITY ZONE 1B ==== #
 resource "aws_subnet" "public_1b" {
   vpc_id            = aws_vpc.aws_vpc.id
-  cidr_block        = var.public_subnets_1b
+  cidr_block        = var.web_subnets_1b
   availability_zone = var.availability_zones[1]
   tags = {
     Name        = "${var.app_name}-public-subnet-1b"
@@ -51,7 +51,7 @@ resource "aws_subnet" "public_1b" {
 
 resource "aws_subnet" "private_1b" {
   vpc_id            = aws_vpc.aws_vpc.id
-  cidr_block        = var.private_subnets_1b
+  cidr_block        = var.authentication_subnets_1b
   availability_zone = var.availability_zones[1]
   tags = {
     Name        = "${var.app_name}-private-subnet-1b"

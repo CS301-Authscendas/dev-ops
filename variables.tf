@@ -65,22 +65,22 @@ variable "app_domain_soa" {
   description = "Start of Authority for Application Domain Name"
 }
 
-variable "public_subnets_1a" {
+variable "web_subnets_1a" {
   description = "List of public subnets for Availability Zone (1a)"
   type        = string
 }
 
-variable "public_subnets_1b" {
+variable "web_subnets_1b" {
   description = "List of public subnets for Availability Zone (1b)"
   type        = string
 }
 
-variable "private_subnets_1a" {
+variable "authentication_subnets_1a" {
   description = "List of private subnets for Availability Zone (1a)"
   type        = string
 }
 
-variable "private_subnets_1b" {
+variable "authentication_subnets_1b" {
   description = "List of private subnets for Availability Zone (1a)"
   type        = string
 }

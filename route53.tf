@@ -11,8 +11,8 @@ resource "aws_route53_record" "www" {
   type            = "A"
 
   alias {
-    name                   = aws_lb.external_alb.dns_name
-    zone_id                = aws_lb.external_alb.zone_id
+    name                   = aws_lb.web_alb.dns_name
+    zone_id                = aws_lb.web_alb.zone_id
     evaluate_target_health = true
   }
 }

@@ -1,7 +1,7 @@
 # alb.tf | Load Balancer Configuration
 
-resource "aws_lb" "external_alb" {
-  name               = "${var.app_name}-external-alb"
+resource "aws_lb" "web_alb" {
+  name               = "${var.app_name}-web-alb"
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.public_1a.id, aws_subnet.public_1b.id]
@@ -11,14 +11,13 @@ resource "aws_lb" "external_alb" {
     aws_subnet.public_1a, aws_subnet.public_1b
   ]
   tags = {
-    Name        = "${var.app_name}-external-alb"
+    Name        = "${var.app_name}-web-alb"
     Environment = var.app_environment
   }
 }
 
-resource "aws_lb" "internal_alb" {
-  name = "${var.app_name}-internal-alb"
-  // TODO: Change back to internal after testing
+resource "aws_lb" "authentication_alb" {
+  name               = "${var.app_name}-authentication-alb"
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.private_1a.id, aws_subnet.private_1b.id]
@@ -28,12 +27,12 @@ resource "aws_lb" "internal_alb" {
     aws_subnet.private_1a, aws_subnet.private_1b
   ]
   tags = {
-    Name        = "${var.app_name}-internal-alb"
+    Name        = "${var.app_name}-authentication-alb"
     Environment = var.app_environment
   }
 }
 
-resource "aws_lb_target_group" "external_alb_target_group" {
+resource "aws_lb_target_group" "web_alb_target_group" {
   name        = "${var.app_name}-external-tg"
   port        = 3000
   protocol    = "HTTP"
@@ -58,7 +57,7 @@ resource "aws_lb_target_group" "external_alb_target_group" {
   }
 }
 
-resource "aws_lb_target_group" "internal_alb_target_group" {
+resource "aws_lb_target_group" "authentication_alb_target_group" {
   name        = "${var.app_name}-internal-tg"
   port        = 3000
   protocol    = "HTTP"
@@ -84,13 +83,13 @@ resource "aws_lb_target_group" "internal_alb_target_group" {
 }
 
 resource "aws_lb_listener" "external_listener" {
-  load_balancer_arn = aws_lb.external_alb.arn
+  load_balancer_arn = aws_lb.web_alb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.external_alb_target_group.id
+    target_group_arn = aws_lb_target_group.web_alb_target_group.id
   }
 
   #   default_action {
@@ -105,13 +104,13 @@ resource "aws_lb_listener" "external_listener" {
 }
 
 resource "aws_lb_listener" "internal_listener" {
-  load_balancer_arn = aws_lb.internal_alb.arn
+  load_balancer_arn = aws_lb.authentication_alb.arn
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.internal_alb_target_group.id
+    target_group_arn = aws_lb_target_group.authentication_alb_target_group.id
   }
 
   #   default_action {
@@ -126,7 +125,7 @@ resource "aws_lb_listener" "internal_listener" {
 }
 
 # resource "aws_lb_listener" "external-listener-https" {
-#   load_balancer_arn = aws_lb.external_alb.arn
+#   load_balancer_arn = aws_lb.web_alb.arn
 #   port              = "443"
 #   protocol          = "HTTPS"
 

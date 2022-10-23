@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1a" {
     [
         {
             "name" : "${var.app_name}-${each.key}-1a",
-            "image" : "${var.app_name}-ecr-${each.key}-latest",
+            "image" : "${aws_ecr_repository.aws_ecr[each.value.cluster].repository_url}/${var.app_name}-ecr-${each.key}-latest",
             "entryPoint" : [],
             "essential" : true,
             "logConfiguration" : {
@@ -85,7 +85,7 @@ resource "aws_ecs_service" "aws_ecs_service_webserver_1a" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.external_alb_target_group.arn
+    target_group_arn = aws_lb_target_group.web_alb_target_group.arn
     container_name   = "${var.app_name}-webserver-1a"
     container_port   = var.microservices["webserver"].containerPort
   }
@@ -104,7 +104,7 @@ resource "aws_ecs_service" "aws_ecs_service_users_1a" {
 
   network_configuration {
     subnets          = [aws_subnet.private_1a.id]
-    assign_public_ip = false
+    assign_public_ip = true
     security_groups = [
       aws_security_group.ecs_security_group.id,
       aws_security_group.alb_security_group.id
@@ -125,7 +125,7 @@ resource "aws_ecs_service" "aws_ecs_service_notifications_1a" {
 
   network_configuration {
     subnets          = [aws_subnet.private_1a.id]
-    assign_public_ip = false
+    assign_public_ip = true
     security_groups = [
       aws_security_group.ecs_security_group.id,
       aws_security_group.alb_security_group.id
@@ -144,7 +144,7 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1a" {
 
   network_configuration {
     subnets          = [aws_subnet.private_1a.id]
-    assign_public_ip = false
+    assign_public_ip = true
     security_groups = [
       aws_security_group.ecs_security_group.id,
       aws_security_group.alb_security_group.id
@@ -152,7 +152,7 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1a" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.internal_alb_target_group.arn
+    target_group_arn = aws_lb_target_group.authentication_alb_target_group.arn
     container_name   = "${var.app_name}-authentication-1a"
     container_port   = var.microservices["authentication"].containerPort
   }
