@@ -10,6 +10,17 @@ resource "aws_dynamodb_table" "users" {
     type = "S"
   }
 
+  attribute {
+    name = "UUID"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "GameTitleIndex"
+    hash_key        = "email"
+    range_key       = "UUID"
+    projection_type = "INCLUDE"
+  }
   # TODO: Mention this feature explicitly
   #   replica {
   #     region_name = var.aws_replica_region
