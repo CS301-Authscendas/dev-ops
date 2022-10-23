@@ -27,8 +27,8 @@ def lambda_upload(event, context):
         form_data = cgi.parse_multipart(fp, pdict)
         print("form_data=", form_data)
 
-        file = io.BytesIO(bytes(form_data["file"], encoding="utf-8"))
-        file_name = form_data["file_name"]
+        file = io.BytesIO(bytes(form_data["file"][0], encoding="utf-8"))
+        file_name = form_data["file_name"][0]
 
         bucket = s3.Bucket(bucket_name)
         bucket_object = bucket.Object(file_name + ".xlsx")
