@@ -1,9 +1,9 @@
 import base64
-import email.parser
 import io
 import os
 
 import boto3
+from requests_toolbelt.multipart import decoder
 
 
 def lambda_upload(event, context):
@@ -17,12 +17,13 @@ def lambda_upload(event, context):
         bucket_name = os.getenv("BUCKET_NAME")
         file_name = "test.xlsx"
 
-        test = email.parser.BytesParser().parsebytes(base64.b64decode(event["body"]))
-        print(
-            test.get_param("name", header="content-disposition"),
-            test.get_param("filename", header="content-disposition"),
-            test.get_payload(decode=True),
+        multipart_data = decoder.MultipartDecoder.from_response(
+            base64.b64decode(event["body"])
         )
+        print(multipart_data)
+        for part in multipart_data.parts:
+            print(part.content)  # Alternatively, part.text if you want unicode
+            print(part.headers)
 
         file = io.BytesIO(bytes(event["body"], encoding="utf-8"))
 
