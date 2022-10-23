@@ -19,7 +19,7 @@ def lambda_upload(event, context):
         content_type_header = event["headers"]["content-type"]
         body = base64.b64decode(event["body"])
 
-        fp = io.BytesIO(body.encode("utf-8"))
+        fp = io.BytesIO(body)
         pdict = cgi.parse_header(content_type_header)[1]
 
         if "boundary" in pdict:
