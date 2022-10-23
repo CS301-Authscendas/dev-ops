@@ -11,15 +11,13 @@ resource "aws_dynamodb_table" "users" {
   }
 
   attribute {
-    name = "UUID"
+    name = "id"
     type = "S"
   }
 
   global_secondary_index {
-    name            = "EmailUUIDIndex"
-    hash_key        = "email"
-    range_key       = "UUID"
-    projection_type = "ALL"
+    name            = "IDIndex"
+    hash_key        = "id"
   }
   # TODO: Mention this feature explicitly
   #   replica {
