@@ -146,7 +146,11 @@ resource "aws_wafv2_web_acl" "waf" {
   }
 }
 
-resource "aws_wafv2_web_acl_association" "example" {
+resource "aws_wafv2_web_acl_association" "web_server_alb" {
   resource_arn = aws_lb.external_alb.arn
+  web_acl_arn  = aws_wafv2_web_acl.waf.arn
+}
+resource "aws_wafv2_web_acl_association" "authentication_alb" {
+  resource_arn = aws_lb.internal_alb.arn
   web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
