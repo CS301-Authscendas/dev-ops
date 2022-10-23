@@ -38,7 +38,8 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1a" {
                     "containerPort" : ${each.value.containerPort}
                 }
             ],
-            "environment_files": [{
+            "environment": [{ "name" : "NODE_ENV", "value" : "production" }],
+            "environmentFiles": [{
                 "type" : "s3",
                 "value" : "${aws_s3_bucket.s3_bucket_secrets.arn}/${each.key}/.env"
             }],
@@ -79,8 +80,7 @@ resource "aws_ecs_service" "aws_ecs_service_webserver_1a" {
     subnets          = aws_subnet.web_1a.*.id
     assign_public_ip = true
     security_groups = [
-      aws_security_group.ecs_security_group.id,
-      aws_security_group.alb_security_group.id
+      aws_security_group.web_ecs_security_group.id,
     ]
   }
 
@@ -106,8 +106,7 @@ resource "aws_ecs_service" "aws_ecs_service_users_1a" {
     subnets          = [aws_subnet.authentication_1a.id]
     assign_public_ip = true
     security_groups = [
-      aws_security_group.ecs_security_group.id,
-      aws_security_group.alb_security_group.id
+      aws_security_group.organization_ecs_security_group.id,
     ]
   }
 
@@ -127,8 +126,7 @@ resource "aws_ecs_service" "aws_ecs_service_notifications_1a" {
     subnets          = [aws_subnet.authentication_1a.id]
     assign_public_ip = true
     security_groups = [
-      aws_security_group.ecs_security_group.id,
-      aws_security_group.alb_security_group.id
+      aws_security_group.organization_ecs_security_group.id,
     ]
   }
 }
@@ -146,8 +144,7 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1a" {
     subnets          = [aws_subnet.authentication_1a.id]
     assign_public_ip = true
     security_groups = [
-      aws_security_group.ecs_security_group.id,
-      aws_security_group.alb_security_group.id
+      aws_security_group.authentication_ecs_security_group.id,
     ]
   }
 
