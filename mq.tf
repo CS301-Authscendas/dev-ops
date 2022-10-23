@@ -2,14 +2,14 @@
 
 // TODO: Mention explicitly that we'll setup CLUSTER_MULTI_AZ
 resource "aws_mq_broker" "mq_broker_1a" {
-  broker_name         = "${var.app_name}-broker-1a"
-  engine_type         = "RabbitMQ"
-  engine_version      = "3.9.16"
-  host_instance_type  = "mq.t3.micro"
-  deployment_mode     = "SINGLE_INSTANCE"
-  security_groups     = [aws_security_group.mq_security_group.id]
-  subnet_ids          = [aws_subnet.private_1a.id]
-  publicly_accessible = false
+  broker_name        = "${var.app_name}-broker-1a"
+  engine_type        = "RabbitMQ"
+  engine_version     = "3.9.16"
+  host_instance_type = "mq.m5.large"
+  deployment_mode    = "CLUSTER_MULTI_AZ"
+  #   security_groups     = [aws_security_group.mq_security_group.id]
+  #   subnet_ids          = [aws_subnet.authentication_1a.id, aws_subnet.authentication_1b.id]
+  publicly_accessible = true
 
   user {
     username = var.aws_mq_username
@@ -21,25 +21,25 @@ resource "aws_mq_broker" "mq_broker_1a" {
   }
 }
 
-resource "aws_mq_broker" "mq_broker_1b" {
-  broker_name         = "${var.app_name}-broker-1b"
-  engine_type         = "RabbitMQ"
-  engine_version      = "3.9.16"
-  host_instance_type  = "mq.t3.micro"
-  deployment_mode     = "SINGLE_INSTANCE"
-  security_groups     = [aws_security_group.mq_security_group.id]
-  subnet_ids          = [aws_subnet.private_1b.id]
-  publicly_accessible = false
+# resource "aws_mq_broker" "mq_broker_1b" {
+#   broker_name         = "${var.app_name}-broker-1b"
+#   engine_type         = "RabbitMQ"
+#   engine_version      = "3.9.16"
+#   host_instance_type  = "mq.t3.micro"
+#   deployment_mode     = "SINGLE_INSTANCE"
+#   security_groups     = [aws_security_group.mq_security_group.id]
+#   subnet_ids          = [aws_subnet.authentication_1b.id]
+#   publicly_accessible = false
 
-  user {
-    username = var.aws_mq_username
-    password = var.aws_mq_password
-  }
-  tags = {
-    Name        = "${var.app_name}-broker-1b"
-    Environment = var.app_environment
-  }
-}
+#   user {
+#     username = var.aws_mq_username
+#     password = var.aws_mq_password
+#   }
+#   tags = {
+#     Name        = "${var.app_name}-broker-1b"
+#     Environment = var.app_environment
+#   }
+# }
 
 resource "aws_security_group" "mq_security_group" {
   vpc_id = aws_vpc.aws_vpc.id

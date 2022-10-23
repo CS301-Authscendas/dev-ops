@@ -107,8 +107,3 @@ variable "microservices" {
     totalMemory      = number
   }))
 }
-
-variable "microservices_env_config" {
-  description = "List of microservices environment variables"
-  type        = map(any)
-}
