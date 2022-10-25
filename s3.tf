@@ -56,3 +56,16 @@ resource "aws_s3_bucket" "s3_bucket_secrets" {
     Environment = var.app_environment
   }
 }
+
+resource "aws_s3_bucket_acl" "s3_bucket_secrets_acl" {
+  bucket = aws_s3_bucket.s3_bucket_secrets.id
+  acl    = "public-read"
+}
+
+resource "aws_s3_bucket_versioning" "s3_bucket_secrets_versioning_excel" {
+  bucket = aws_s3_bucket.s3_bucket_secrets.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}

@@ -33,7 +33,7 @@ resource "aws_lb" "gateway_alb" {
 }
 
 resource "aws_lb_target_group" "web_alb_target_group" {
-  name        = "${var.app_name}-external-tg"
+  name        = "${var.app_name}-web-tg"
   port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
@@ -52,13 +52,13 @@ resource "aws_lb_target_group" "web_alb_target_group" {
     create_before_destroy = true
   }
   tags = {
-    Name        = "${var.app_name}-lb-web-tg"
+    Name        = "${var.app_name}-web-tg"
     Environment = var.app_environment
   }
 }
 
 resource "aws_lb_target_group" "gateway_alb_target_group" {
-  name        = "${var.app_name}-internal-tg"
+  name        = "${var.app_name}-gateway-tg"
   port        = 3000
   protocol    = "HTTP"
   target_type = "ip"
@@ -77,7 +77,7 @@ resource "aws_lb_target_group" "gateway_alb_target_group" {
     create_before_destroy = true
   }
   tags = {
-    Name        = "${var.app_name}-lb-gateway-tg"
+    Name        = "${var.app_name}-gateway-tg"
     Environment = var.app_environment
   }
 }
