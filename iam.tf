@@ -27,35 +27,17 @@ resource "aws_iam_policy" "ecs_task_execution_role" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
-      #   {
-      #     Action = [
-      #       "s3:*",
-      #     ],
-      #     Effect = "Allow",
-      #     Resource = [
-      #       "arn:aws:s3:::${var.app_name}-secrets",
-      #       "arn:aws:s3:::${var.app_name}-secrets/",
-      #       "arn:aws:s3:::${var.app_name}-secrets/*"
-      #     ]
-      #   },
       {
-        Effect = "Allow",
         Action = [
-          "s3:GetObject"
+          "s3:*",
         ],
+        Effect = "Allow",
         Resource = [
+          "arn:aws:s3:::${var.app_name}-secrets",
+          "arn:aws:s3:::${var.app_name}-secrets/",
           "arn:aws:s3:::${var.app_name}-secrets/*"
         ]
       },
-      {
-        Effect = "Allow",
-        Action = [
-          "s3:GetBucketLocation"
-        ],
-        Resource = [
-          "arn:aws:s3:::${var.app_name}"
-        ]
-      }
     ]
   })
 }
