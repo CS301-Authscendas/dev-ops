@@ -26,6 +26,12 @@ resource "aws_security_group" "web_ecs_security_group" {
     security_groups = [aws_security_group.web_alb_security_group.id]
   }
 
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+  }
+
   tags = {
     Name        = "${var.app_name}-web-ecs"
     Environment = var.app_environment
@@ -56,6 +62,12 @@ resource "aws_security_group" "authentication_ecs_security_group" {
     to_port         = 0
     protocol        = "-1"
     security_groups = [aws_security_group.authentication_alb_security_group.id]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
   }
 
   tags = {

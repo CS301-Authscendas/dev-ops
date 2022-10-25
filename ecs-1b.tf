@@ -55,7 +55,7 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1b" {
   memory                   = each.value.totalMemory
   cpu                      = each.value.totalCpu
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn            = aws_iam_role.ecs_task_execution_role.arn
+  task_role_arn            = aws_iam_role.ecs_task_role.arn
   tags = {
     Name        = "${var.app_name}-ecs-td-${each.key}-1b"
     Environment = var.app_environment
@@ -131,6 +131,32 @@ resource "aws_ecs_service" "aws_ecs_service_notifications_1b" {
   }
 }
 
+resource "aws_ecs_service" "aws_ecs_service_gateway_1b" {
+  name                 = "${var.app_name}-ecs-service-gateway-1b"
+  cluster              = aws_ecs_cluster.aws_ecs_1b[var.microservices["gateway"].cluster].id
+  task_definition      = "${aws_ecs_task_definition.aws_ecs_task_1b["gateway"].family}:${max(aws_ecs_task_definition.aws_ecs_task_1b["gateway"].revision, data.aws_ecs_task_definition.main_1b["gateway"].revision)}"
+  launch_type          = "FARGATE"
+  scheduling_strategy  = "REPLICA"
+  desired_count        = 1
+  force_new_deployment = true
+
+  network_configuration {
+    subnets          = [aws_subnet.authentication_1b.id]
+    assign_public_ip = true
+    security_groups = [
+      aws_security_group.authentication_ecs_security_group.id,
+    ]
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.gateway_alb_target_group.arn
+    container_name   = "${var.app_name}-gateway-1b"
+    container_port   = var.microservices["gateway"].containerPort
+  }
+
+  depends_on = [aws_lb_listener.internal_listener]
+}
+
 resource "aws_ecs_service" "aws_ecs_service_authentication_1b" {
   name                 = "${var.app_name}-ecs-service-authentication-1b"
   cluster              = aws_ecs_cluster.aws_ecs_1b[var.microservices["authentication"].cluster].id
@@ -149,7 +175,7 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1b" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.authentication_alb_target_group.arn
+    target_group_arn = aws_lb_target_group.gateway_alb_target_group.arn
     container_name   = "${var.app_name}-authentication-1b"
     container_port   = var.microservices["authentication"].containerPort
   }
