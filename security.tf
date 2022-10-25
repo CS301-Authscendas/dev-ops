@@ -27,9 +27,10 @@ resource "aws_security_group" "web_ecs_security_group" {
   }
 
   egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -65,9 +66,10 @@ resource "aws_security_group" "authentication_ecs_security_group" {
   }
 
   egress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -101,6 +103,14 @@ resource "aws_security_group" "organization_ecs_security_group" {
     protocol        = "-1"
     security_groups = [aws_security_group.organization_alb_security_group.id]
   }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 
   tags = {
     Name        = "${var.app_name}-organization-ecs"

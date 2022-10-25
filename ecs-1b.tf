@@ -109,8 +109,6 @@ resource "aws_ecs_service" "aws_ecs_service_users_1b" {
       aws_security_group.organization_ecs_security_group.id,
     ]
   }
-
-  depends_on = [aws_lb_listener.internal_listener]
 }
 
 resource "aws_ecs_service" "aws_ecs_service_notifications_1b" {
@@ -173,12 +171,4 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1b" {
       aws_security_group.authentication_ecs_security_group.id,
     ]
   }
-
-  load_balancer {
-    target_group_arn = aws_lb_target_group.gateway_alb_target_group.arn
-    container_name   = "${var.app_name}-authentication-1b"
-    container_port   = var.microservices["authentication"].containerPort
-  }
-
-  depends_on = [aws_lb_listener.internal_listener]
 }
