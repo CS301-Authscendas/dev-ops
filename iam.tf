@@ -75,6 +75,13 @@ resource "aws_iam_policy" "ecs_task_role" {
         Effect   = "Allow",
         Resource = "*"
       },
+      {
+        Action = [
+          "kms:*",
+        ],
+        Effect   = "Allow",
+        Resource = aws_kms_key.jwt_signing_key.arn
+      },
     ]
   })
 }
