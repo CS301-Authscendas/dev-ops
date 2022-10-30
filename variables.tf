@@ -55,16 +55,6 @@ variable "app_domain" {
   description = "Application Domain Name"
 }
 
-variable "app_domain_ns" {
-  type        = list(string)
-  description = "Nameservers for Application Domain Name"
-}
-
-variable "app_domain_soa" {
-  type        = string
-  description = "Start of Authority for Application Domain Name"
-}
-
 variable "web_subnets_1a" {
   description = "List of public subnets for Availability Zone (1a)"
   type        = string

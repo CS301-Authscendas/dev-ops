@@ -93,10 +93,10 @@ resource "aws_ecs_service" "aws_ecs_service_webserver_1a" {
   depends_on = [aws_lb_listener.external_listener]
 }
 
-resource "aws_ecs_service" "aws_ecs_service_users_1a" {
-  name                 = "${var.app_name}-ecs-service-users-1a"
-  cluster              = aws_ecs_cluster.aws_ecs_1a[var.microservices["users"].cluster].id
-  task_definition      = "${aws_ecs_task_definition.aws_ecs_task_1a["users"].family}:${max(aws_ecs_task_definition.aws_ecs_task_1a["users"].revision, data.aws_ecs_task_definition.main_1a["users"].revision)}"
+resource "aws_ecs_service" "aws_ecs_service_organizations_1a" {
+  name                 = "${var.app_name}-ecs-service-organizations-1a"
+  cluster              = aws_ecs_cluster.aws_ecs_1a[var.microservices["organizations"].cluster].id
+  task_definition      = "${aws_ecs_task_definition.aws_ecs_task_1a["organizations"].family}:${max(aws_ecs_task_definition.aws_ecs_task_1a["organizations"].revision, data.aws_ecs_task_definition.main_1a["organizations"].revision)}"
   launch_type          = "FARGATE"
   scheduling_strategy  = "REPLICA"
   desired_count        = 1

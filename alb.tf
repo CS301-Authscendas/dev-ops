@@ -21,7 +21,7 @@ resource "aws_lb" "gateway_alb" {
   internal           = false
   load_balancer_type = "application"
   subnets            = [aws_subnet.authentication_1a.id, aws_subnet.authentication_1b.id]
-  security_groups    = [aws_security_group.authentication_alb_security_group.id]
+  security_groups    = [aws_security_group.gateway_alb_security_group.id]
 
   depends_on = [
     aws_subnet.authentication_1a, aws_subnet.authentication_1b
