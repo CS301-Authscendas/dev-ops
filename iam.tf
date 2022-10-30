@@ -82,6 +82,18 @@ resource "aws_iam_policy" "ecs_task_role" {
         Effect   = "Allow",
         Resource = aws_kms_key.jwt_signing_key.arn
       },
+      {
+        Action = [
+          "ses:GetTemplate",
+        ],
+        Effect = "Allow",
+        Resource = [
+          aws_ses_template.account_ready_email_template.arn,
+          aws_ses_template.register_email_template.arn,
+          aws_ses_template.twofa_email_template.arn,
+          aws_ses_template.login_email_template.arn,
+        ]
+      },
     ]
   })
 }
