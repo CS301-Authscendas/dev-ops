@@ -39,7 +39,7 @@ resource "aws_security_group" "web_ecs_security_group" {
   }
 }
 
-resource "aws_security_group" "authentication_alb_security_group" {
+resource "aws_security_group" "gateway_alb_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
@@ -50,7 +50,7 @@ resource "aws_security_group" "authentication_alb_security_group" {
   }
 
   tags = {
-    Name        = "${var.app_name}-authentication-alb"
+    Name        = "${var.app_name}-gateway-alb"
     Environment = var.app_environment
   }
 }
@@ -62,7 +62,7 @@ resource "aws_security_group" "authentication_ecs_security_group" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.authentication_alb_security_group.id]
+    security_groups = [aws_security_group.gateway_alb_security_group.id]
   }
 
   egress {
