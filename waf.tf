@@ -151,6 +151,6 @@ resource "aws_wafv2_web_acl_association" "web_server_alb" {
   web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
 resource "aws_wafv2_web_acl_association" "authentication_alb" {
-  resource_arn = aws_lb.authentication_alb.arn
+  resource_arn = aws_lb.gateway_alb.arn
   web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
