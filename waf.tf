@@ -1,7 +1,7 @@
 # waf.tf | Web Application Firewall Configuration
 resource "aws_wafv2_web_acl" "waf" {
-  name        = "CS301-ALB-WAF"
-  description = "CS301 ALB WAF"
+  name        = "${var.app_name}-waf"
+  description = "${var.app_name}-waf"
   scope       = "REGIONAL"
 
   default_action {
@@ -146,11 +146,11 @@ resource "aws_wafv2_web_acl" "waf" {
   }
 }
 
-resource "aws_wafv2_web_acl_association" "web_server_alb" {
+resource "aws_wafv2_web_acl_association" "web_alb" {
   resource_arn = aws_lb.web_alb.arn
   web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
-resource "aws_wafv2_web_acl_association" "authentication_alb" {
+resource "aws_wafv2_web_acl_association" "gateway_alb" {
   resource_arn = aws_lb.gateway_alb.arn
   web_acl_arn  = aws_wafv2_web_acl.waf.arn
 }
