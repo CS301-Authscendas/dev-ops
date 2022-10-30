@@ -36,11 +36,11 @@ resource "aws_lb" "organizations_alb" {
   name               = "${var.app_name}-organizations-alb"
   internal           = true
   load_balancer_type = "application"
-  subnets            = [aws_subnet.authentication_1a.id, aws_subnet.authentication_1a.id]
+  subnets            = [aws_subnet.authentication_1a.id, aws_subnet.authentication_1b.id]
   security_groups    = [aws_security_group.web_alb_security_group.id]
 
   depends_on = [
-    aws_subnet.authentication_1a, aws_subnet.authentication_1a
+    aws_subnet.authentication_1a, aws_subnet.authentication_1b
   ]
   tags = {
     Name        = "${var.app_name}-web-alb"
@@ -111,7 +111,7 @@ resource "aws_lb_target_group" "organizations_alb_target_group" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/api/healthcheck"
+    path                = "/healthcheck"
     unhealthy_threshold = "2"
   }
   lifecycle {
@@ -145,9 +145,20 @@ resource "aws_lb_listener" "internal_listener" {
   }
 }
 
-resource "aws_lb_listener" "organizations_listener" {
+resource "aws_lb_listener" "authentication_to_organizations_listener" {
   load_balancer_arn = aws_lb.organizations_alb.arn
-  port              = "80"
+  port              = var.microservices["authentication"]["containerPort"]
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.organizations_alb_target_group.id
+  }
+}
+
+resource "aws_lb_listener" "gateway_to_organizations_listener" {
+  load_balancer_arn = aws_lb.organizations_alb.arn
+  port              = var.microservices["gateway"]["containerPort"]
   protocol          = "HTTP"
 
   default_action {
