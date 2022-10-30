@@ -16,10 +16,10 @@ resource "aws_s3_object" "notifications_env" {
   source = "env/notifications/.env"
 }
 
-resource "aws_s3_object" "users_env" {
+resource "aws_s3_object" "organizations_env" {
   bucket = aws_s3_bucket.s3_bucket_secrets.id
-  key    = "users/.env"
-  source = "env/users/.env"
+  key    = "organizations/.env"
+  source = "env/organizations/.env"
 }
 
 resource "aws_s3_object" "gateway_env" {

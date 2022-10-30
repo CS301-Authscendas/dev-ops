@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1a" {
     [
         {
             "name" : "${var.app_name}-${each.key}-1a",
-            "image" : "${aws_ecr_repository.aws_ecr[each.value.cluster].repository_url}/${var.app_name}-ecr-${each.key}-latest",
+            "image" : "${aws_ecr_repository.aws_ecr[each.value.cluster].repository_url}/${var.app_name}-ecr-${each.key}:latest",
             "entryPoint" : [],
             "essential" : true,
             "logConfiguration" : {
@@ -38,7 +38,9 @@ resource "aws_ecs_task_definition" "aws_ecs_task_1a" {
                     "containerPort" : ${each.value.containerPort}
                 }
             ],
-            "environment": [{ "name" : "NODE_ENV", "value" : "production" }],
+            "environment": [
+                { "name" : "NODE_ENV", "value" : "production" }
+            ],
             "environmentFiles": [{
                 "type" : "s3",
                 "value" : "${aws_s3_bucket.s3_bucket_secrets.arn}/${each.key}/.env"
