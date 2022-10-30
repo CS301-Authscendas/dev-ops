@@ -1,6 +1,6 @@
 output "authentication_alb_dns" {
   value       = aws_lb.gateway_alb.dns_name
-  description = "The DNS name for Internal AWS Application Load Balancer"
+  description = "The DNS name for Gateway AWS Application Load Balancer"
 }
 
 output "s3_arn" {

@@ -75,17 +75,6 @@ resource "aws_iam_policy" "ecs_task_role" {
         Effect   = "Allow",
         Resource = "*"
       },
-      {
-        Action = [
-          "s3:*",
-        ],
-        Effect = "Allow",
-        Resource = [
-          "arn:aws:s3:::${var.app_name}-secrets",
-          "arn:aws:s3:::${var.app_name}-secrets/",
-          "arn:aws:s3:::${var.app_name}-secrets/*"
-        ]
-      }
     ]
   })
 }
