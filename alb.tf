@@ -32,6 +32,22 @@ resource "aws_lb" "gateway_alb" {
   }
 }
 
+resource "aws_lb" "organizations_alb" {
+  name               = "${var.app_name}-organizations-alb"
+  internal           = true
+  load_balancer_type = "application"
+  subnets            = [aws_subnet.authentication_1a.id, aws_subnet.authentication_1a.id]
+  security_groups    = [aws_security_group.web_alb_security_group.id]
+
+  depends_on = [
+    aws_subnet.authentication_1a, aws_subnet.authentication_1a
+  ]
+  tags = {
+    Name        = "${var.app_name}-web-alb"
+    Environment = var.app_environment
+  }
+}
+
 resource "aws_lb_target_group" "web_alb_target_group" {
   name        = "${var.app_name}-web-tg"
   port        = 3000
@@ -82,6 +98,31 @@ resource "aws_lb_target_group" "gateway_alb_target_group" {
   }
 }
 
+resource "aws_lb_target_group" "organizations_alb_target_group" {
+  name        = "${var.app_name}-organizations-tg"
+  port        = 3000
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.aws_vpc.id
+
+  health_check {
+    healthy_threshold   = "3"
+    interval            = "300" // 5 minutes
+    protocol            = "HTTP"
+    matcher             = "200"
+    timeout             = "3"
+    path                = "/api/healthcheck"
+    unhealthy_threshold = "2"
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+  tags = {
+    Name        = "${var.app_name}-organizations-tg"
+    Environment = var.app_environment
+  }
+}
+
 resource "aws_lb_listener" "external_listener" {
   load_balancer_arn = aws_lb.web_alb.arn
   port              = "80"
@@ -91,16 +132,6 @@ resource "aws_lb_listener" "external_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.web_alb_target_group.id
   }
-
-  #   default_action {
-  # type = "redirect"
-
-  # redirect {
-  #   port        = "443"
-  #   protocol    = "HTTPS"
-  #   status_code = "HTTP_301"
-  # }
-  #   }
 }
 
 resource "aws_lb_listener" "internal_listener" {
@@ -112,28 +143,15 @@ resource "aws_lb_listener" "internal_listener" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.gateway_alb_target_group.id
   }
-
-  #   default_action {
-  # type = "redirect"
-
-  # redirect {
-  #   port        = "443"
-  #   protocol    = "HTTPS"
-  #   status_code = "HTTP_301"
-  # }
-  #   }
 }
 
-# resource "aws_lb_listener" "external-listener-https" {
-#   load_balancer_arn = aws_lb.web_alb.arn
-#   port              = "443"
-#   protocol          = "HTTPS"
+resource "aws_lb_listener" "organizations_listener" {
+  load_balancer_arn = aws_lb.organizations_alb.arn
+  port              = "80"
+  protocol          = "HTTP"
 
-#   ssl_policy      = "ELBSecurityPolicy-2016-08"
-#   certificate_arn = "<certificate-arn>"
-
-#   default_action {
-#     target_group_arn = aws_lb_target_group.target_group.id
-#     type             = "forward"
-#   }
-# }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.organizations_alb_target_group.id
+  }
+}

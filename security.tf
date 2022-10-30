@@ -117,3 +117,29 @@ resource "aws_security_group" "organization_ecs_security_group" {
     Environment = var.app_environment
   }
 }
+
+resource "aws_security_group" "organizations_alb_security_group" {
+  vpc_id = aws_vpc.aws_vpc.id
+
+  ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    security_groups = [
+      aws_security_group.authentication_ecs_security_group.id
+    ]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+
+  tags = {
+    Name        = "${var.app_name}-organization-alb"
+    Environment = var.app_environment
+  }
+}

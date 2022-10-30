@@ -111,6 +111,12 @@ resource "aws_ecs_service" "aws_ecs_service_organizations_1b" {
       aws_security_group.organization_ecs_security_group.id,
     ]
   }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.organizations_alb_target_group.arn
+    container_name   = "${var.app_name}-organizations-1b"
+    container_port   = var.microservices["organizations"].containerPort
+  }
 }
 
 resource "aws_ecs_service" "aws_ecs_service_notifications_1b" {
