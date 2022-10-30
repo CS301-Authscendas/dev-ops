@@ -150,7 +150,7 @@ resource "aws_ecs_service" "aws_ecs_service_gateway_1a" {
     subnets          = [aws_subnet.authentication_1a.id]
     assign_public_ip = true
     security_groups = [
-      aws_security_group.authentication_ecs_security_group.id,
+      aws_security_group.gateway_ecs_security_group.id,
     ]
   }
 
