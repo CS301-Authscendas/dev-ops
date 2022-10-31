@@ -4,9 +4,10 @@ resource "aws_security_group" "web_alb_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
+    from_port = 80
+    to_port   = 80
+    protocol  = "tcp"
+    // NOTE: Allow connection from the internet
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -20,9 +21,10 @@ resource "aws_security_group" "web_ecs_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    // NOTE: Allow connection from web ALB only
     security_groups = [aws_security_group.web_alb_security_group.id]
   }
 
@@ -55,36 +57,14 @@ resource "aws_security_group" "gateway_alb_security_group" {
   }
 }
 
-resource "aws_security_group" "authentication_ecs_security_group" {
-  vpc_id = aws_vpc.aws_vpc.id
-
-  ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    security_groups = [aws_security_group.gateway_ecs_security_group.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name        = "${var.app_name}-authentication-ecs"
-    Environment = var.app_environment
-  }
-}
-
 resource "aws_security_group" "gateway_ecs_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    // NOTE: Allow connection from gateway ALB only
     security_groups = [aws_security_group.gateway_alb_security_group.id]
   }
 
@@ -101,14 +81,43 @@ resource "aws_security_group" "gateway_ecs_security_group" {
   }
 }
 
+
+resource "aws_security_group" "authentication_ecs_security_group" {
+  vpc_id = aws_vpc.aws_vpc.id
+
+  ingress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    // NOTE: Allow connection from gateway ECS only
+    security_groups = [aws_security_group.gateway_ecs_security_group.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${var.app_name}-authentication-ecs"
+    Environment = var.app_environment
+  }
+}
+
 resource "aws_security_group" "organization_ecs_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
   ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    security_groups = [aws_security_group.organizations_alb_security_group.id]
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    // NOTE: Allow connection from gateway and authentication ecs
+    security_groups = [
+      aws_security_group.gateway_ecs_security_group.id,
+      aws_security_group.authentication_ecs_security_group.id
+    ]
   }
 
   egress {
@@ -121,30 +130,6 @@ resource "aws_security_group" "organization_ecs_security_group" {
 
   tags = {
     Name        = "${var.app_name}-organization-ecs"
-    Environment = var.app_environment
-  }
-}
-
-resource "aws_security_group" "organizations_alb_security_group" {
-  vpc_id = aws_vpc.aws_vpc.id
-
-  ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    security_groups = [aws_security_group.gateway_ecs_security_group.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-
-  tags = {
-    Name        = "${var.app_name}-organization-alb"
     Environment = var.app_environment
   }
 }

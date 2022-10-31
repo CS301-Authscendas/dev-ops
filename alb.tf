@@ -32,25 +32,9 @@ resource "aws_lb" "gateway_alb" {
   }
 }
 
-resource "aws_lb" "organizations_alb" {
-  name               = "${var.app_name}-organizations-alb"
-  internal           = true
-  load_balancer_type = "application"
-  subnets            = [aws_subnet.authentication_1a.id, aws_subnet.authentication_1b.id]
-  security_groups    = [aws_security_group.web_alb_security_group.id]
-
-  depends_on = [
-    aws_subnet.authentication_1a, aws_subnet.authentication_1b
-  ]
-  tags = {
-    Name        = "${var.app_name}-web-alb"
-    Environment = var.app_environment
-  }
-}
-
 resource "aws_lb_target_group" "web_alb_target_group" {
   name        = "${var.app_name}-web-tg"
-  port        = 3000
+  port        = var.microservices["webserver"]["containerPort"]
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.aws_vpc.id
@@ -75,7 +59,7 @@ resource "aws_lb_target_group" "web_alb_target_group" {
 
 resource "aws_lb_target_group" "gateway_alb_target_group" {
   name        = "${var.app_name}-gateway-tg"
-  port        = 3000
+  port        = var.microservices["gateway"]["containerPort"]
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.aws_vpc.id
@@ -94,31 +78,6 @@ resource "aws_lb_target_group" "gateway_alb_target_group" {
   }
   tags = {
     Name        = "${var.app_name}-gateway-tg"
-    Environment = var.app_environment
-  }
-}
-
-resource "aws_lb_target_group" "organizations_alb_target_group" {
-  name        = "${var.app_name}-organizations-tg"
-  port        = 3000
-  protocol    = "HTTP"
-  target_type = "ip"
-  vpc_id      = aws_vpc.aws_vpc.id
-
-  health_check {
-    healthy_threshold   = "3"
-    interval            = "300" // 5 minutes
-    protocol            = "HTTP"
-    matcher             = "200"
-    timeout             = "3"
-    path                = "/healthcheck"
-    unhealthy_threshold = "2"
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
-  tags = {
-    Name        = "${var.app_name}-organizations-tg"
     Environment = var.app_environment
   }
 }
@@ -142,27 +101,5 @@ resource "aws_lb_listener" "internal_listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.gateway_alb_target_group.id
-  }
-}
-
-resource "aws_lb_listener" "authentication_to_organizations_listener" {
-  load_balancer_arn = aws_lb.organizations_alb.arn
-  port              = var.microservices["authentication"]["containerPort"]
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.organizations_alb_target_group.id
-  }
-}
-
-resource "aws_lb_listener" "gateway_to_organizations_listener" {
-  load_balancer_arn = aws_lb.organizations_alb.arn
-  port              = var.microservices["gateway"]["containerPort"]
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.organizations_alb_target_group.id
   }
 }
