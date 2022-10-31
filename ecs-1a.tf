@@ -86,10 +86,15 @@ resource "aws_ecs_service" "aws_ecs_service_webserver_1a" {
     ]
   }
 
+  service_registries {
+    registry_arn = aws_service_discovery_service.discovery_service["webserver"].arn
+    port         = var.microservices["webserver"]["hostPort"]
+  }
+
   load_balancer {
     target_group_arn = aws_lb_target_group.web_alb_target_group.arn
     container_name   = "${var.app_name}-webserver-1a"
-    container_port   = var.microservices["webserver"].containerPort
+    container_port   = var.microservices["webserver"]["hostPort"]
   }
 
   depends_on = [aws_lb_listener.external_listener]
@@ -112,10 +117,9 @@ resource "aws_ecs_service" "aws_ecs_service_organizations_1a" {
     ]
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.organizations_alb_target_group.arn
-    container_name   = "${var.app_name}-organizations-1a"
-    container_port   = var.microservices["organizations"].containerPort
+  service_registries {
+    registry_arn = aws_service_discovery_service.discovery_service["organizations"].arn
+    port         = var.microservices["organizations"]["hostPort"]
   }
 }
 
@@ -131,9 +135,11 @@ resource "aws_ecs_service" "aws_ecs_service_notifications_1a" {
   network_configuration {
     subnets          = [aws_subnet.authentication_1a.id]
     assign_public_ip = true
-    security_groups = [
-      aws_security_group.organization_ecs_security_group.id,
-    ]
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.discovery_service["notifications"].arn
+    port         = var.microservices["notifications"]["hostPort"]
   }
 }
 
@@ -157,7 +163,12 @@ resource "aws_ecs_service" "aws_ecs_service_gateway_1a" {
   load_balancer {
     target_group_arn = aws_lb_target_group.gateway_alb_target_group.arn
     container_name   = "${var.app_name}-gateway-1a"
-    container_port   = var.microservices["gateway"].containerPort
+    container_port   = var.microservices["gateway"]["hostPort"]
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.discovery_service["gateway"].arn
+    port         = var.microservices["gateway"]["hostPort"]
   }
 
   depends_on = [aws_lb_listener.internal_listener]
@@ -178,5 +189,10 @@ resource "aws_ecs_service" "aws_ecs_service_authentication_1a" {
     security_groups = [
       aws_security_group.authentication_ecs_security_group.id,
     ]
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.discovery_service["authentication"].arn
+    port         = var.microservices["authentication"]["hostPort"]
   }
 }
