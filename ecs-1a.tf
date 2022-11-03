@@ -97,7 +97,10 @@ resource "aws_ecs_service" "aws_ecs_service_webserver_1a" {
     container_port   = var.microservices["webserver"]["hostPort"]
   }
 
-  depends_on = [aws_lb_listener.external_listener]
+  depends_on = [
+    aws_lb_listener.external_http_listener,
+    aws_lb_listener.external_https_listener
+  ]
 }
 
 resource "aws_ecs_service" "aws_ecs_service_organizations_1a" {
@@ -171,7 +174,10 @@ resource "aws_ecs_service" "aws_ecs_service_gateway_1a" {
     port         = var.microservices["gateway"]["hostPort"]
   }
 
-  depends_on = [aws_lb_listener.internal_listener]
+  depends_on = [
+    aws_lb_listener.internal_http_listener,
+    aws_lb_listener.internal_https_listener
+  ]
 }
 
 resource "aws_ecs_service" "aws_ecs_service_authentication_1a" {
