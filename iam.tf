@@ -113,7 +113,10 @@ resource "aws_iam_policy" "ecs_task_role" {
       },
       {
         Action = [
-          "ses:*",
+          "ses:GetTemplate",
+          "ses:GetEmailTemplate",
+          "ses:SendEmail",
+          "ses:SendTemplatedEmail",
         ],
         Effect = "Allow",
         Resource = [
