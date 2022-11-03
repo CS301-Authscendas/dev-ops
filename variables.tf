@@ -55,6 +55,11 @@ variable "app_domain" {
   description = "Application Domain Name"
 }
 
+variable "email_address" {
+  type        = string
+  description = "Email Address for SSL Registration"
+}
+
 variable "web_subnets_1a" {
   description = "List of public subnets for Availability Zone (1a)"
   type        = string

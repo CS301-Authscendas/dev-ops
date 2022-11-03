@@ -113,7 +113,7 @@ resource "aws_iam_policy" "ecs_task_role" {
       },
       {
         Action = [
-          "ses:GetTemplate",
+          "ses:*",
         ],
         Effect = "Allow",
         Resource = [
