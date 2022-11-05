@@ -83,5 +83,7 @@ resource "aws_lambda_function_url" "lambda_function_url" {
   cors {
     allow_origins = ["https://itsag2t4.com", "http://localhost:8000"]
     allow_methods = ["POST"]
+    allow_headers = ["*"]
+    max_age       = 86400
   }
 }
