@@ -63,7 +63,7 @@ resource "aws_lb_listener" "external_https_listener" {
   protocol          = "HTTPS"
 
   ssl_policy      = "ELBSecurityPolicy-2016-08"
-  certificate_arn = aws_acm_certificate.certificate.arn
+  certificate_arn = aws_acm_certificate.web_certificate.arn
 
 
   default_action {
@@ -135,7 +135,7 @@ resource "aws_lb_listener" "internal_https_listener" {
   protocol          = "HTTPS"
 
   ssl_policy      = "ELBSecurityPolicy-2016-08"
-  certificate_arn = aws_acm_certificate.certificate.arn
+  certificate_arn = aws_acm_certificate.web_certificate.arn
 
   default_action {
     type             = "forward"
