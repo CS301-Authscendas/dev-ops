@@ -101,7 +101,7 @@ resource "aws_lb_target_group" "gateway_alb_target_group" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/api/healthcheck"
+    path                = "/v1/healthcheck"
     unhealthy_threshold = "2"
   }
   lifecycle {
