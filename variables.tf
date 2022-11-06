@@ -50,7 +50,7 @@ variable "app_environment" {
   description = "Application Environment"
 }
 
-variable "app_domain" {
+variable "web_domain" {
   type        = string
   description = "Application Domain Name"
 }

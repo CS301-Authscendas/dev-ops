@@ -21,7 +21,7 @@ resource "aws_s3_bucket_cors_configuration" "s3_bucket_excel_cors" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["POST"]
-    allowed_origins = [var.app_domain, "http://localhost:8000"]
+    allowed_origins = [var.web_domain, "http://localhost:8000"]
   }
 }
 
