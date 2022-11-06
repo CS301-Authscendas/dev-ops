@@ -12,7 +12,7 @@ resource "aws_s3_bucket" "s3_bucket_excel" {
 
 resource "aws_s3_bucket_acl" "s3_bucket_excel_acl" {
   bucket = aws_s3_bucket.s3_bucket_excel.id
-  acl    = "public-read-write"
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_cors_configuration" "s3_bucket_excel_cors" {
@@ -59,7 +59,7 @@ resource "aws_s3_bucket" "s3_bucket_secrets" {
 
 resource "aws_s3_bucket_acl" "s3_bucket_secrets_acl" {
   bucket = aws_s3_bucket.s3_bucket_secrets.id
-  acl    = "public-read"
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_versioning" "s3_bucket_secrets_versioning_excel" {

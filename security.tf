@@ -3,11 +3,19 @@
 resource "aws_security_group" "web_alb_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
+  // NOTE: Allow HTTP connection from the internet
   ingress {
-    from_port = 80
-    to_port   = 80
-    protocol  = "tcp"
-    // NOTE: Allow connection from the internet
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // NOTE: Allow HTTPs connection from the internet
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -44,9 +52,18 @@ resource "aws_security_group" "web_ecs_security_group" {
 resource "aws_security_group" "gateway_alb_security_group" {
   vpc_id = aws_vpc.aws_vpc.id
 
+  // NOTE: Allow HTTP connection from the internet
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  // NOTE: Allow HTTPs connection from the internet
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
