@@ -144,7 +144,6 @@ resource "aws_security_group" "organization_ecs_security_group" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-
   tags = {
     Name        = "${var.app_name}-organization-ecs"
     Environment = var.app_environment

@@ -23,7 +23,7 @@ resource "aws_subnet" "web_1a" {
   cidr_block        = var.web_subnets_1a
   availability_zone = var.availability_zones[0]
   tags = {
-    Name        = "${var.app_name}-public-subnet-1a"
+    Name        = "${var.app_name}-web-1a"
     Environment = var.app_environment
   }
 }
@@ -121,7 +121,6 @@ resource "aws_route_table_association" "web_1b" {
 #   }
 # }
 
-# ==== CONFIGURATION FOR PRIVATE ROUTE TABLE ==== #
 resource "aws_route_table" "authentication" {
   vpc_id = aws_vpc.aws_vpc.id
   depends_on = [
