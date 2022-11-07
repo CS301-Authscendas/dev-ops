@@ -9,3 +9,8 @@ output "web_alb_dns" {
   value       = aws_lb.web_alb.dns_name
   description = "The DNS name for External Web AWS ALB"
 }
+
+output "rabbit_mq" {
+  description = "RabbitMQ Instances"
+  value       = aws_mq_broker.mq_broker.instances
+}

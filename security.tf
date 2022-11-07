@@ -132,6 +132,7 @@ resource "aws_security_group" "organization_ecs_security_group" {
     protocol  = "-1"
     // NOTE: Allow connection from gateway and authentication ecs
     security_groups = [
+      aws_security_group.mq_security_group.id,
       aws_security_group.gateway_ecs_security_group.id,
       aws_security_group.authentication_ecs_security_group.id
     ]
